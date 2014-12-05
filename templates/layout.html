@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>marke.me</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+</head>
+<body>
+    <div id="layout" class="content pure-g">
+        <div id="nav" class="pure-u">
+            <a href="#" class="nav-menu-button">Menu</a>
+            <div class="nav-inner">
+                <button class="primary-button pure-button">Nouveau</button>
+                <div class="pure-menu pure-menu-open">
+                    <ul>
+                        <li><a href="#"><i class="fa fa-bookmark-o"></i> Bookmarks <span class="bookmark-count">(2)</span></a></li>
+                        <li><a href="#"><i class="fa fa-tags"></i> Tags</a></li>
+                        <li><a href="#"><i class="fa fa-clock-o"></i> Historique</a></li>
+                        <li><a href="#"><i class="fa fa-search"></i> Rechercher</a></li>
+                        <li class="pure-menu-heading">Tags</li>
+                        <li><a href="#"><span class="bookmark-label-personal"></span>Personal</a></li>
+                        <li><a href="#"><span class="bookmark-label-work"></span>Work</a></li>
+                        <li><a href="#"><span class="bookmark-label-travel"></span>Travel</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
