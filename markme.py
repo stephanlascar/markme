@@ -1,7 +1,3 @@
-from flask import Flask, render_template
+from app import create_app
 
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return render_template('index.html')
+app = create_app()
