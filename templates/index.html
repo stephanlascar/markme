@@ -2,21 +2,21 @@
 
 {% block content %}
 
-    {% for bookmark in bookmarks %}
     <div id="list" class="pure-u-1">
+        {% for bookmark in bookmarks %}
         <div class="bookmark-item bookmark-item-selected pure-g">
             <div class="pure-u">
-                <img class="bookmark-avatar" height="80" width="80" src="http://dummyimage.com/80">
+                <img class="bookmark-avatar" height="80" width="80" src='http://api.page2images.com/directlink?p2i_url=www.google.com&p2i_key=6fc505ce7d073ba3&p2i_size=80x80'>
             </div>
 
             <div class="pure-u-2-3">
-                <h5 class="bookmark-date">Il y a un jour</h5>
+                <h5 class="bookmark-date">{{ bookmark.date }}</h5>
                 <h4 class="bookmark-subject">{{ bookmark.title }}</h4>
                 <p class="bookmark-desc">{{ bookmark.description }}</p>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 
     <div id="main" class="pure-u-1">
         <div class="bookmark-content">

@@ -6,13 +6,18 @@ body {
     color: #333;
 }
 
-
-
 a {
     text-decoration: none;
     color: #1b98f8;
 }
 
+.button-secondary {
+    background: rgb(66, 184, 221); /* this is a light blue */
+}
+
+.button-xsmall {
+    font-size: 70%;
+}
 
 /*
  * -- HELPER STYLES --
@@ -87,6 +92,7 @@ a {
     background: transparent;
     border: none;
     text-align: left;
+    margin-bottom: 20px;
 }
 #nav .pure-menu a:hover,
 #nav .pure-menu a:focus {
@@ -272,4 +278,38 @@ a {
         margin: 0;
         padding: 0;
     }
+}
+
+
+/*
+ * -- BOOKMARKLET --
+ */
+.bookmarklet {
+    padding: 20px;
+}
+
+.bookmarklet table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: .5em;
+}
+
+.bookmarklet td {
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.bookmarklet td.label {
+    width: 80px;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.bookmarklet input,
+.bookmarklet textarea {
+    width: 100%;
+}
+
+.bookmarklet textarea {
+    resize: none;
 }
