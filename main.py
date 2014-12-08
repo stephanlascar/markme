@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template
-from models import Bookmark
+from database import mongo
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    bookmarks = Bookmark.query.all()
-    return render_template('index.html', bookmarks=bookmarks)
+    return render_template('index.html', bookmarks=mongo.db.bookmarks.find())

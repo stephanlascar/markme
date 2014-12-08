@@ -1,4 +1,3 @@
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.pymongo import PyMongo
 
-
-db = SQLAlchemy()
+mongo = PyMongo()

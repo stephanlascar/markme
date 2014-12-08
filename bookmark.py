@@ -1,8 +1,7 @@
 import datetime
-from flask import Blueprint, render_template, redirect, url_for
-from database import db
+from flask import Blueprint, render_template
+from database import mongo
 from forms.bookmark import BookmarkForm
-from models import Bookmark
 
 bookmark = Blueprint('bookmark', __name__)
 
@@ -10,10 +9,11 @@ bookmark = Blueprint('bookmark', __name__)
 def create_bookmark():
     form = BookmarkForm()
     if form.validate_on_submit():
-        model = Bookmark()
-        form.populate_obj(model)
-        model.date = datetime.datetime.now()
-        db.session.add(model)
-        db.session.commit()
+        mongo.db.bookmarks.save({'title': form.title.data,
+                                'url': form.url.data,
+                                'description':  form.description.data,
+                                'referrer': form.referrer.data,
+                                'tags': form.tags.data,
+                                'date': datetime.datetime.now()})
         return render_template('bookmarket.html', form=form)
     return render_template('bookmarket.html', form=form)

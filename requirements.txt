@@ -1,5 +1,5 @@
 Flask==0.10.1
 gunicorn==19.1.1
-Flask-SQLAlchemy==2.0
 Flask_WTF==0.10.3
-Flask-Babel==0.9.
+Flask-Babel==0.9
+Flask-PyMongo==0.3.0
