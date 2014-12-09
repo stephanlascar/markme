@@ -1,7 +1,5 @@
 from flask import Flask
 from flask.ext.babel import Babel
-from bookmark import bookmark
-from bookmarklet import bookmarklet
 from database import mongo
 from main import main
 
@@ -15,6 +13,4 @@ def create_app():
     mongo.init_app(app)
 
     app.register_blueprint(main)
-    app.register_blueprint(bookmark)
-    app.register_blueprint(bookmarklet)
     return app

@@ -11,3 +11,4 @@ class BookmarkForm(Form):
     description = TextAreaField('Description')
     referrer = HiddenField('Referrer')
     tags = TagListField('Tags')
+    image = HiddenField('Image')

@@ -6,7 +6,7 @@
         {% for bookmark in bookmarks %}
         <div class="bookmark-item bookmark-item-selected pure-g">
             <div class="pure-u">
-                <img class="bookmark-avatar" height="80" width="80" src='http://api.page2images.com/directlink?p2i_url=www.google.com&p2i_key=6fc505ce7d073ba3&p2i_size=80x80'>
+                <img class="bookmark-avatar" height="150" width="150" src='http://custom.pagepeeker.com/thumbs.php?size=m&url={{ bookmark.url|safe }}'>
             </div>
 
             <div class="pure-u-2-3">

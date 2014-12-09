@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
 </head>
 <body>
-    <form class="pure-form bookmarklet" method="post" action="{{url_for('bookmark.create_bookmark')}}">
+    <form class="pure-form bookmarklet" method="post" action="{{url_for('main.add_bookmark')}}">
         {{ form.hidden_tag() }}
 
         <table>
