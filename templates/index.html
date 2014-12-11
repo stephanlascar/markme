@@ -10,7 +10,7 @@
             </div>
 
             <div class="pure-u-2-3">
-                <h5 class="bookmark-date">{{ bookmark.date }}</h5>
+                <h5 class="bookmark-date">{{ bookmark.date|humanize }}</h5>
                 <h4 class="bookmark-subject">{{ bookmark.title }}</h4>
                 <p class="bookmark-desc">{{ bookmark.description }}</p>
             </div>
