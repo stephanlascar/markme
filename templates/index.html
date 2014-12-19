@@ -2,25 +2,30 @@
 
 {% block content %}
 
-    {% for bookmark in bookmarks %}
-    <div class="row">
-        <h5 class="date">{{ bookmark.date|humanize }}</h5>
+    {% for group in bookmarks|group_by_date('date', '%Y-%m-%dT%H:00:00')|reverse %}
+        <div class="row">
+            <h5 class="date">{{ group.grouper|humanize }}</h5>
+        </div>
 
-        <div class="col-md-3">
-            <a href="{{ bookmark.url|safe }}" target="_blank" class="thumbnail">
-                <img class="bookmark-avatar" src='http://custom.pagepeeker.com/thumbs.php?size=m&url={{ bookmark.url|safe }}'>
-            </a>
+        {% for bookmark in group.list %}
+        <div class="row">
+            <div class="col-md-3">
+                <a href="{{ bookmark.url|safe }}" target="_blank" class="thumbnail">
+                    <img class="bookmark-avatar" src='http://custom.pagepeeker.com/thumbs.php?size=m&url={{ bookmark.url|safe }}'>
+                </a>
+            </div>
+            <div class="col-md-9 caption">
+                <h4><a href="{{ bookmark.url|safe }}" target="_blank">{{ bookmark.title }}</a></h4>
+                <p>{{ bookmark.description }}</p>
+                <p>
+                    {% for tag in bookmark.tags %}
+                        <a href="#" class="btn btn-success btn-xs">{{ tag }}</a>
+                    {% endfor %}
+                </p>
+            </div>
         </div>
-        <div class="col-md-9 caption">
-            <h4><a href="{{ bookmark.url|safe }}" target="_blank">{{ bookmark.title }}</a></h4>
-            <p>{{ bookmark.description }}</p>
-            <p>
-                {% for tag in bookmark.tags %}
-                    <a href="#" class="btn btn-success btn-xs">{{ tag }}</a>
-                {% endfor %}
-            </p>
-        </div>
-    </div>
+        {% endfor %}
+
     {% endfor %}
 
 {% endblock %}
