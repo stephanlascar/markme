@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    {% for group in bookmarks|group_by_date('date', '%Y-%m-%dT%H:00:00')|reverse %}
+    {% for group in bookmarks|group_by_date('published', '%Y-%m-%dT%H:00:00')|reverse %}
         <div class="row">
             <h5 class="date">{{ group.grouper|humanize }}</h5>
         </div>

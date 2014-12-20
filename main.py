@@ -1,7 +1,8 @@
 import datetime
+from bson import ObjectId
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask.ext.login import login_required, login_user, logout_user
+from flask.ext.login import login_required, login_user, logout_user, current_user
 import pymongo
 from auth import bcrypt, User
 
@@ -50,6 +51,11 @@ def add_bookmark():
                                  'description': form.description.data,
                                  'referrer': form.referrer.data,
                                  'tags': form.tags.data,
-                                 'date': datetime.datetime.utcnow()})
+                                 'published': datetime.datetime.utcnow(),
+                                 'public': True,
+                                 'user': {
+                                     '_id': ObjectId(current_user.get_id()),
+                                     'email': current_user.email
+                                 }})
         return '<script type="text/javascript">window.close();</script>'
     return render_template('bookmarklet.html', form=form)
