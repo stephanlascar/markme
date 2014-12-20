@@ -1,5 +1,5 @@
 import datetime
-from bson import ObjectId
+from bson import ObjectId, SON
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask.ext.login import login_required, login_user, logout_user, current_user
@@ -26,7 +26,10 @@ def index():
                 flash('Utilisateur ou mot de passe non valide.')
 
     criteria = {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]} if current_user.is_authenticated() else {'public': True}
-    return render_template('index.html', bookmarks=mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING), form=form)
+    bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
+    tags = mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])
+    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": { "nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
+    return render_template('index.html', bookmarks=bookmarks, tags=tags['result'], users=users['result'], form=form)
 
 
 @main.route('/logout')
@@ -56,6 +59,7 @@ def add_bookmark():
                                  'public': form.public.data,
                                  'user': {
                                      '_id': ObjectId(current_user.get_id()),
+                                     'nickname': current_user.nickname,
                                      'email': current_user.email
                                  }})
         return '<script type="text/javascript">window.close();</script>'

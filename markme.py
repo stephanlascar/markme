@@ -10,10 +10,12 @@ app = create_app()
 
 @app.before_first_request
 def create_mongo_index():
-    mongo.db.bookmarks.ensure_index('date', pymongo.DESCENDING, background=True)
+    mongo.db.bookmarks.ensure_index('published', pymongo.DESCENDING, background=True)
+    mongo.db.bookmarks.ensure_index('user._id', pymongo.DESCENDING, background=True)
     mongo.db.bookmarks.ensure_index('title', pymongo.ASCENDING, background=True)
     mongo.db.bookmarks.ensure_index('description', background=True)
     mongo.db.bookmarks.ensure_index('tags', pymongo.ASCENDING, background=True)
+    mongo.db.users.ensure_index('email', pymongo.ASCENDING, background=True)
 
 
 @app.template_filter()

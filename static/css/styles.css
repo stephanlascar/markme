@@ -84,8 +84,33 @@ body {
     border-color: transparent transparent transparent #888888;
 }
 
+.bookmarks .caption h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .bookmarks .caption h4 a {
     color: #434343;
+    font-weight: bold;
+}
+
+.bookmark {
+    margin-bottom: 10px;
+}
+
+.bookmark .user {
+    margin: 0;
+    font-size: 12px;
+}
+
+.bookmark .user img {
+    max-height: 20px;
+}
+
+.bookmark .user a,
+.bookmark .user a:hover,
+.bookmark .user a:focus {
+    color: #5cb85c;
     font-weight: bold;
 }
 
@@ -98,4 +123,32 @@ body {
     top: 50px;
     padding: 20px;
     z-index: 1000;
+}
+
+.right-menu h3 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 30px;
+}
+
+.right-menu h3:first-of-type {
+    margin-top: 0;
+}
+
+.right-menu .most-active-user img {
+    max-height: 40px;
+    margin-right: 10px;
+}
+
+.right-menu .most-active-user a,
+.right-menu .most-active-user a:hover,
+.right-menu .most-active-user a:focus {
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+}
+
+.green {
+    color: #5cb85c;
 }

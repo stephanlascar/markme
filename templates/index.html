@@ -2,30 +2,44 @@
 
 {% block content %}
 
-    {% for group in bookmarks|group_by_date('published', '%Y-%m-%dT%H:00:00')|reverse %}
-        <div class="row">
-            <h5 class="date">{{ group.grouper|humanize }}</h5>
-        </div>
+    <div class="col-md-6 col-md-offset-3 bookmarks">
+        {% include 'layout/alert.html' %}
+        {% for group in bookmarks|group_by_date('published', '%Y-%m-%dT%H:00:00')|reverse %}
+            <div class="row">
+                <h5 class="date">{{ group.grouper|humanize }}</h5>
+            </div>
 
-        {% for bookmark in group.list|reverse %}
-        <div class="row">
-            <div class="col-md-3">
-                <a href="{{ bookmark.url|safe }}" target="_blank" class="thumbnail">
-                    <img class="bookmark-avatar" src='http://custom.pagepeeker.com/thumbs.php?size=m&url={{ bookmark.url|safe }}'>
-                </a>
-            </div>
-            <div class="col-md-9 caption">
-                <h4><a href="{{ bookmark.url|safe }}" target="_blank">{{ bookmark.title }}</a></h4>
-                <p>{{ bookmark.description }}</p>
-                <p>
-                    {% for tag in bookmark.tags %}
-                        <a href="#" class="btn btn-success btn-xs">{{ tag }}</a>
-                    {% endfor %}
-                </p>
-            </div>
-        </div>
+            {% for bookmark in group.list|reverse %}
+                <div class="row bookmark">
+                    <div class="col-md-3">
+                        <a href="{{ bookmark.url|safe }}" target="_blank" class="thumbnail">
+                            <img class="bookmark-avatar" src="http://custom.pagepeeker.com/thumbs.php?size=m&url={{ bookmark.url|safe }}">
+                        </a>
+                    </div>
+                    <div class="col-md-9 caption">
+                        <h4><a href="{{ bookmark.url|safe }}" target="_blank">{{ bookmark.title }}</a></h4>
+                        <p class="user"><img src="{{ bookmark.user.email | gravatar }}"/> par <a href="#">{{ bookmark.user.nickname }}</a></p>
+                        <p>{{ bookmark.description }}</p>
+                        <p>
+                            {% for tag in bookmark.tags %}
+                            <a href="#" class="btn btn-success btn-xs">{{ tag }}</a>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+
         {% endfor %}
-
-    {% endfor %}
+    </div>
+    <div class="col-md-3 sidebar right-menu">
+        <h3>Tags <span class="green">public</span></h3>
+        {% for tag in tags %}
+            <a href="“" class="tag-cloud label label-success">{{ tag._id }}</a>
+        {% endfor %}
+        <h3>Utilisateurs <span class="green">actif</span></h3>
+        {% for user in users %}
+        <p class="most-active-user"><img src="{{ user._id.email | gravatar }}"/> <a href="#">{{ user._id.nickname }}</a></p>
+        {% endfor %}
+    </div>
 
 {% endblock %}

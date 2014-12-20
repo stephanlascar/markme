@@ -26,11 +26,7 @@
     <div class="container-fluid main-container">
         <div class="row">
             <div class="col-md-3 sidebar left-menu">{% include 'layout/left_menu.html' %}</div>
-            <div class="col-md-6 col-md-offset-3 bookmarks">
-                {% include 'layout/alert.html' %}
-                {% block content %}{% endblock %}
-            </div>
-            <div class="col-md-3 sidebar right-menu">oeuoeuou</div>
+            {% block content %}{% endblock %}
         </div>
     </div>
 </body>

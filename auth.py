@@ -42,15 +42,14 @@ class User(UserMixin):
 
     def __init__(self, args):
         self.id = args['_id']
+        self.nickname = args['nickname']
         self.email = args['email']
-
-    def __str__(self):
-        return self.email
 
 
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser(description='Ajoute un nouvel utilisateur')
     arg_parser.add_argument('-e', '--email', required=True, dest="email")
+    arg_parser.add_argument('-n', '--nickname', required=True, dest="nickname")
     arg_parser.add_argument('-p', '--password', required=True, dest="password")
     args = arg_parser.parse_args()
 
@@ -60,4 +59,4 @@ if __name__ == "__main__":
     db = connection[mongo_creds['database']]
     db.authenticate(mongo_creds['username'], mongo_creds['password'])
 
-    db.users.save({'email': args.email, 'password': bcrypt.generate_password_hash(args.password, rounds=12), 'inserted': datetime.datetime.utcnow()})
+    db.users.save({'email': args.email, 'nickname': args.nickname, 'password': bcrypt.generate_password_hash(args.password, rounds=12), 'inserted': datetime.datetime.utcnow()})
