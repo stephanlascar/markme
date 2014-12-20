@@ -4,48 +4,54 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>marke.me</title>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bookmarklet.css')}}">
 </head>
 <body>
-    <form class="pure-form bookmarklet" method="post" action="{{url_for('main.add_bookmark')}}">
-        {{ form.hidden_tag() }}
+    <div class="container-fluid">
+        <form class="form-horizontal" role="form" method="post" action="{{url_for('main.add_bookmark')}}">
+            {{ form.hidden_tag() }}
 
-        <table>
-            <tr>
-                <td class="label">{{ form.title.label }}</td>
-                <td>
-                    {{ form.title(required=true) }}
+            <div class="form-group">
+                {{ form.title.label(class='col-sm-1 control-label') }}
+                <div class="col-sm-11">
+                    {{ form.title(required=true, class='form-control') }}
                     {% if form.title.errors %}
-                    {{ form.title.errors|join(', ') }}
+                        {{ form.title.errors|join(', ') }}
                     {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td class="label">{{ form.url.label }}</td>
-                <td>
-                    {{ form.url(required=true) }}
-                    {% if form.url.errors %}
-                    {{ form.url.errors|join(', ') }}
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td class="label">{{ form.tags.label }}</td>
-                <td>
-                    {{ form.tags() }}
-                </td>
-            </tr>
-            <tr>
-                <td class="label">{{ form.description.label }}</td>
-                <td>
-                    {{ form.description(rows=10) }}
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
 
-        <button type="submit" class="pure-button pure-button-primary">Enregistrer</button>
-    </form>
+            <div class="form-group">
+                {{ form.url.label(class='col-sm-1 control-label') }}
+                <div class="col-sm-11">
+                    {{ form.url(required=true, class='form-control') }}
+                    {% if form.title.errors %}
+                        {{ form.url.errors|join(', ') }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form.tags.label(class='col-sm-1 control-label') }}
+                <div class="col-sm-11">
+                    {{ form.tags(class='form-control') }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form.description.label(class='col-sm-1 control-label') }}
+                <div class="col-sm-11">
+                    {{ form.description(rows=10, class='form-control') }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <button type="submit" class="btn btn-default">Enregistrer</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

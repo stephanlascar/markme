@@ -12,8 +12,7 @@ from forms.login import LoginForm
 
 main = Blueprint('main', __name__)
 
-
-@main.route("/", methods=["GET", "POST"])
+@main.route('/', methods=['GET', 'POST'])
 def index():
     form = LoginForm()
 
@@ -28,7 +27,7 @@ def index():
     return render_template('index.html', bookmarks=mongo.db.bookmarks.find().sort('date', pymongo.DESCENDING), form=form)
 
 
-@main.route("/logout")
+@main.route('/logout')
 @login_required
 def logout():
     logout_user()

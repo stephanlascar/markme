@@ -30,4 +30,4 @@ if (document.referrer) {
     referrer = document.referrer
 }
 
-void open('http://localhost:5000{{url_for("main.bookmarklet")}}?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title) + '&description=' + encodeURIComponent(description) + '&tags=' + encodeURIComponent(tags) + '&referrer=' + encodeURIComponent(referrer), 'mark.me +', 'location=no, toolbar=no, scrollbars=yes, width=430, height=480, status=no');
+void open('http://localhost:5000{{url_for("main.bookmarklet")}}?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title) + '&description=' + encodeURIComponent(description) + '&tags=' + encodeURIComponent(tags) + '&referrer=' + encodeURIComponent(referrer), 'mark.me +', 'location=no, toolbar=no, scrollbars=yes, width=430, height=525, status=no');

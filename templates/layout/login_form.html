@@ -1,0 +1,22 @@
+{{ form.hidden_tag() }}
+
+<div class="form-group {% if form.email.errors %}has-error{% endif %}">
+    {{ form.email.label(class="control-label") }}
+    {{ form.email(class="form-control") }}
+    {% if form.email.errors %}
+    <span class="help-block">{{ form.email.errors|join(', ') }}</span>
+    {% endif %}
+</div>
+<div class="form-group {% if form.password.errors %}has-error{% endif %}">
+    {{ form.password.label(class="control-label") }}
+    {{ form.password(class="form-control") }}
+    {% if form.password.errors %}
+    <span class="help-block">{{ form.password.errors|join(', ') }}</span>
+    {% endif %}
+</div>
+<div class="checkbox">
+    <label>
+        {{ form.remember_me }} {{ form.remember_me.label.text }}
+    </label>
+</div>
+<button type="submit" class="btn btn-default">Se connecter</button>

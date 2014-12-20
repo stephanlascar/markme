@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask.ext.babel import Babel
 from database import mongo
-from auth import login_manager, bcrypt
+from auth import login_manager, bcrypt, auth
 from main import main
 
 
@@ -16,5 +16,6 @@ def create_app():
     login_manager.init_app(app)
     bcrypt.init_app(app)
 
+    app.register_blueprint(auth)
     app.register_blueprint(main)
     return app

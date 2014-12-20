@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>mark.me</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+</head>
+
+<body style="background-color: #af9877;">
+
+    <div class="container">
+
+        {% include 'layout/alert.html' %}
+
+        <form class="signup" role="form" method="post">
+            {% include 'layout/login_form.html' %}
+        </form>
+
+    </div>
+
+</body>
+</html>
