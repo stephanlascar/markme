@@ -28,26 +28,45 @@
             <div class="col-md-3 sidebar left-menu">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
-                <form role="form" class="signup">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Mot de passe</label>
-                        <input type="password" class="form-control" id="password">
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox"> Se souvenir de moi
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-default">Se connecter</button>
-                </form>
+                {% if current_user.is_authenticated() %}
+                    <a href="javascript:(function() { {% include('bookmarklet.js') %} })();" class="btn btn-primary btn-xs">marke.me +</a>
+                {% else %}
+                    <form role="form" class="signup" method="post" action="{{ url_for('main.index') }}">
+                        {{ form.hidden_tag() }}
 
-                <a href="javascript:(function() { {% include('bookmarklet.js') %} })();" class="btn btn-primary btn-xs">marke.me +</a>
+                        <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+                            {{ form.email.label(class="control-label") }}
+                            {{ form.email(class="form-control") }}
+                            {% if form.email.errors %}
+                            <span class="help-block">{{ form.email.errors|join(', ') }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.password.errors %}has-error{% endif %}">
+                            {{ form.password.label(class="control-label") }}
+                            {{ form.password(class="form-control") }}
+                            {% if form.password.errors %}
+                            <span class="help-block">{{ form.password.errors|join(', ') }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                {{ form.remember_me }} {{ form.remember_me.label.text }}
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-default">Se connecter</button>
+                    </form>
+                {% endif %}
             </div>
-            <div class="col-md-6 col-md-offset-3 bookmarks">{% block content %}{% endblock %}</div>
+            <div class="col-md-6 col-md-offset-3 bookmarks">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger" role="alert">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </div>
             <div class="col-md-3 sidebar right-menu">oeuoeuou</div>
         </div>
     </div>
