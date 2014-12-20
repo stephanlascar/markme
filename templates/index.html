@@ -7,7 +7,7 @@
             <h5 class="date">{{ group.grouper|humanize }}</h5>
         </div>
 
-        {% for bookmark in group.list %}
+        {% for bookmark in group.list|reverse %}
         <div class="row">
             <div class="col-md-3">
                 <a href="{{ bookmark.url|safe }}" target="_blank" class="thumbnail">

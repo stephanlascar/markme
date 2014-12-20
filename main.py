@@ -25,7 +25,8 @@ def index():
             else:
                 flash('Utilisateur ou mot de passe non valide.')
 
-    return render_template('index.html', bookmarks=mongo.db.bookmarks.find().sort('date', pymongo.DESCENDING), form=form)
+    criteria = {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]} if current_user.is_authenticated() else {'public': True}
+    return render_template('index.html', bookmarks=mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING), form=form)
 
 
 @main.route('/logout')
@@ -52,7 +53,7 @@ def add_bookmark():
                                  'referrer': form.referrer.data,
                                  'tags': form.tags.data,
                                  'published': datetime.datetime.utcnow(),
-                                 'public': True,
+                                 'public': form.public.data,
                                  'user': {
                                      '_id': ObjectId(current_user.get_id()),
                                      'email': current_user.email
