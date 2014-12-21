@@ -29,7 +29,7 @@ def index():
     criteria = {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]} if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
     tags = mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])
-    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": { "nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
+    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": {"nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
     return render_template('index.html', bookmarks=bookmarks, tags=tags['result'], users=users['result'], form=form)
 
 
@@ -48,7 +48,7 @@ def bookmarks_by_tags(tag):
     criteria = {'$and': [{'tags': tag}, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}]} if current_user.is_authenticated() else {'$and': [{'tags': tag}, {'public': True}]}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
     tags = mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])
-    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": { "nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
+    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": {"nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
     return render_template('index.html', bookmarks=bookmarks, tags=tags['result'], users=users['result'], form=form)
 
 
