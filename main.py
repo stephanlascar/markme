@@ -13,7 +13,8 @@ from forms.login import LoginForm
 
 main = Blueprint('main', __name__)
 
-@main.route('/', methods=['GET', 'POST'])
+@main.route('/', endpoint='index', methods=['GET', 'POST'])
+@main.route('/bookmarks', endpoint='bookmarks', methods=['GET', 'POST'])
 def index():
     form = LoginForm()
 
@@ -26,6 +27,25 @@ def index():
                 flash('Utilisateur ou mot de passe non valide.')
 
     criteria = {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]} if current_user.is_authenticated() else {'public': True}
+    bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
+    tags = mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])
+    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": { "nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
+    return render_template('index.html', bookmarks=bookmarks, tags=tags['result'], users=users['result'], form=form)
+
+
+@main.route('/tag/<tag>', methods=['GET', 'POST'])
+def bookmarks_by_tags(tag):
+    form = LoginForm()
+
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            mongo_user = mongo.db.users.find_one({'email': form.email.data})
+            if mongo_user and bcrypt.check_password_hash(mongo_user['password'], form.password.data):
+                login_user(User(mongo_user), remember=form.remember_me.data)
+            else:
+                flash('Utilisateur ou mot de passe non valide.')
+
+    criteria = {'$and': [{'tags': tag}, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}]} if current_user.is_authenticated() else {'$and': [{'tags': tag}, {'public': True}]}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
     tags = mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])
     users = mongo.db.bookmarks.aggregate([{"$group": {"_id": { "nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
