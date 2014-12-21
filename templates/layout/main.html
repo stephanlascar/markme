@@ -12,8 +12,9 @@
         <div class="container-fluid">
             <div class="navbar-header"><a class="navbar-brand" href="{{url_for('main.index')}}">marke.me</a></div>
             <div id="navbar" class="collapse navbar-collapse">
-                <form class="navbar-form navbar-right">
-                    <input type="text" class="form-control" placeholder="Rechercher">
+                <form class="navbar-form navbar-right" role="form" method="post" action="{{ url_for('main.searched_bookmarks') }}">
+                    <input type="text" class="form-control" placeholder="titre, description, tag, url" name="filter" id="filter">
+                    <button type="submit" class="btn btn-success">Rechercher</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{url_for('main.bookmarks')}}">Bookmarks public</a></li>
