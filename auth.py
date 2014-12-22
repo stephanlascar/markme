@@ -4,7 +4,7 @@ import os
 from bson import ObjectId
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask.ext.bcrypt import Bcrypt
-from flask.ext.login import LoginManager, UserMixin, login_user
+from flask.ext.login import LoginManager, UserMixin, login_user, login_required, logout_user
 from pymongo import Connection
 from pymongo.uri_parser import parse_uri
 from database import mongo
@@ -31,6 +31,13 @@ def login():
                 flash('Utilisateur ou mot de passe non valide.')
 
     return render_template('login.html', form=form)
+
+
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))
 
 
 @login_manager.user_loader

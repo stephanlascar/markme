@@ -19,41 +19,47 @@ def index():
     form = LoginForm()
 
     if request.method == 'POST':
-        if form.validate_on_submit():
-            mongo_user = mongo.db.users.find_one({'email': form.email.data})
-            if mongo_user and bcrypt.check_password_hash(mongo_user['password'], form.password.data):
-                login_user(User(mongo_user), remember=form.remember_me.data)
-            else:
-                flash('Utilisateur ou mot de passe non valide.')
+        _validate_and_log_user(form)
 
     criteria = {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]} if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
     return render_template('index.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
-@main.route('/tag/<tag>', methods=['GET', 'POST'])
+@main.route('/my/bookmarks')
+def private_bookmarks():
+    criteria = {'user._id': ObjectId(current_user.get_id())}
+    bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
+    return render_template('index.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users())
+
+
+@main.route('/bookmarks/tag/<tag>', methods=['GET', 'POST'])
 def bookmarks_by_tags(tag):
     form = LoginForm()
 
     if request.method == 'POST':
-        if form.validate_on_submit():
-            mongo_user = mongo.db.users.find_one({'email': form.email.data})
-            if mongo_user and bcrypt.check_password_hash(mongo_user['password'], form.password.data):
-                login_user(User(mongo_user), remember=form.remember_me.data)
-            else:
-                flash('Utilisateur ou mot de passe non valide.')
+        _validate_and_log_user(form)
 
     criteria = add_constraint_to_criteria({'tags': tag}, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}) if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
     return render_template('index.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
-@main.route('/test', methods=["POST"])
-def searched_bookmarks():
-    search_criteria = {'$or': [{'title': {'$regex': '%s' % request.form['filter'], '$options': 'i'}}, {'description': {'$regex': '%s' % request.form['filter'], '$options': 'i'}}, {'tags': {'$regex': '%s' % request.form['filter'], '$options': 'i'}}, {'url': {'$regex': '%s' % request.form['filter'], '$options': 'i'}}]}
+@main.route('/filter', methods=['POST'])
+def search():
+    search_criteria = {'$or': [{'title': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'description': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'tags': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'url': {'$regex': '%s' % request.form['search'], '$options': 'i'}}]}
     criteria = add_constraint_to_criteria(search_criteria, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}) if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
     return render_template('index.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=LoginForm())
+
+
+def _validate_and_log_user(form):
+    if form.validate_on_submit():
+        mongo_user = mongo.db.users.find_one({'email': form.email.data})
+        if mongo_user and bcrypt.check_password_hash(mongo_user['password'], form.password.data):
+            login_user(User(mongo_user), remember=form.remember_me.data)
+        else:
+            flash('Utilisateur ou mot de passe non valide.')
 
 
 def _get_most_active_users():
@@ -62,13 +68,6 @@ def _get_most_active_users():
 
 def _get_top_tags(criteria):
     return mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])['result']
-
-
-@main.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
 
 
 @main.route('/bookmarklet')

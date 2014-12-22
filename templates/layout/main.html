@@ -12,12 +12,12 @@
         <div class="container-fluid">
             <div class="navbar-header"><a class="navbar-brand" href="{{url_for('main.index')}}">marke.me</a></div>
             <div id="navbar" class="collapse navbar-collapse">
-                <form class="navbar-form navbar-right" role="form" method="post" action="{{ url_for('main.searched_bookmarks') }}">
-                    <input type="text" class="form-control" placeholder="titre, description, tag, url" name="filter" id="filter">
-                    <button type="submit" class="btn btn-success">Rechercher</button>
+                <form class="navbar-form navbar-right" role="form" method="post" action="{{ url_for('main.search') }}">
+                    <input type="text" class="form-control" placeholder="titre, description, tag, url" name="search" id="search">
+                    <button type="submit" class="btn btn-success">rechercher</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{{url_for('main.bookmarks')}}">Bookmarks public</a></li>
+                    <li><a href="{{url_for('main.bookmarks')}}">bookmarks public</a></li>
                     <!--<li class="active"><a href="#contact">Contact</a></li>-->
                 </ul>
             </div>
@@ -26,7 +26,7 @@
 
     <div class="container-fluid main-container">
         <div class="row">
-            <div class="col-md-3 sidebar left-menu">{% include 'layout/left_menu.html' %}</div>
+            <div class="sidebar left-menu {{ 'private-left-menu col-md-2' if current_user.is_authenticated() else 'col-md-3' }}">{% include 'layout/left_menu.html' %}</div>
             {% block content %}{% endblock %}
         </div>
     </div>
