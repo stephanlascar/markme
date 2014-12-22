@@ -6,7 +6,7 @@ from flask.ext.login import login_required, login_user, logout_user, current_use
 import pymongo
 from auth import bcrypt, User
 
-from database import mongo
+from database import mongo, add_constraint_to_criteria
 from forms.bookmark import BookmarkForm
 from forms.login import LoginForm
 
@@ -28,9 +28,7 @@ def index():
 
     criteria = {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]} if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
-    tags = mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])
-    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": {"nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
-    return render_template('index.html', bookmarks=bookmarks, tags=tags['result'], users=users['result'], form=form)
+    return render_template('index.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
 @main.route('/tag/<tag>', methods=['GET', 'POST'])
@@ -45,21 +43,25 @@ def bookmarks_by_tags(tag):
             else:
                 flash('Utilisateur ou mot de passe non valide.')
 
-    criteria = {'$and': [{'tags': tag}, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}]} if current_user.is_authenticated() else {'$and': [{'tags': tag}, {'public': True}]}
+    criteria = add_constraint_to_criteria({'tags': tag}, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}) if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
-    tags = mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])
-    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": {"nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
-    return render_template('index.html', bookmarks=bookmarks, tags=tags['result'], users=users['result'], form=form)
+    return render_template('index.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
 @main.route('/test', methods=["POST"])
 def searched_bookmarks():
     search_criteria = {'$or': [{'title': {'$regex': '%s' % request.form['filter'], '$options': 'i'}}, {'description': {'$regex': '%s' % request.form['filter'], '$options': 'i'}}, {'tags': {'$regex': '%s' % request.form['filter'], '$options': 'i'}}, {'url': {'$regex': '%s' % request.form['filter'], '$options': 'i'}}]}
-    criteria = {'$and': [search_criteria, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}]} if current_user.is_authenticated() else {'public': True}
+    criteria = add_constraint_to_criteria(search_criteria, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}) if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
-    tags = mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])
-    users = mongo.db.bookmarks.aggregate([{"$group": {"_id": {"nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])
-    return render_template('index.html', bookmarks=bookmarks, tags=tags['result'], users=users['result'], form=LoginForm())
+    return render_template('index.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=LoginForm())
+
+
+def _get_most_active_users():
+    return mongo.db.bookmarks.aggregate([{"$group": {"_id": {"nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])['result']
+
+
+def _get_top_tags(criteria):
+    return mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])['result']
 
 
 @main.route('/logout')
