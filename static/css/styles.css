@@ -1,6 +1,6 @@
 body {
     padding-top: 50px;
-    background-color: #EDEDED;
+    background-color: #ededed;
 }
 
 .navbar-inverse {
@@ -19,10 +19,6 @@ body {
 .navbar-inverse .navbar-brand:hover,
 .navbar-inverse .navbar-brand:focus {
     color: #A3DE38;
-}
-
-.main-container {
-    padding: 20px;
 }
 
 .left-menu {
@@ -98,6 +94,22 @@ body {
     padding-top: 10px;
 }
 
+.row h1 {
+    color: white;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #5cb85c;
+    margin-top: 0;
+    padding-left:15px;
+    height: 33px;
+    line-height: 33px;
+}
+
+.bookmarks {
+    margin-top: 10px;
+}
+
 .bookmarks .date {
     font-size: 14px;
     font-weight: bold;
@@ -154,7 +166,7 @@ body {
     position: fixed;
     bottom: 0;
     right: 0;
-    top: 50px;
+    top: 83px;
     padding: 20px;
     z-index: 1000;
 }
