@@ -4,7 +4,7 @@ from flask.ext.babel import Babel
 from flask.ext.gravatar import Gravatar
 from database import mongo
 from auth import login_manager, bcrypt, auth
-from main import main
+from bookmarks import bookmarks
 
 
 def create_app():
@@ -19,5 +19,5 @@ def create_app():
     bcrypt.init_app(app)
 
     app.register_blueprint(auth)
-    app.register_blueprint(main)
+    app.register_blueprint(bookmarks)
     return app

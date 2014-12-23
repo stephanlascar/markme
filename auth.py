@@ -26,7 +26,7 @@ def login():
             mongo_user = mongo.db.users.find_one({'email': form.email.data})
             if mongo_user and bcrypt.check_password_hash(mongo_user['password'], form.password.data):
                 login_user(User(mongo_user), remember=form.remember_me.data)
-                return redirect(request.args.get("next") or url_for('main.index'))
+                return redirect(request.args.get("next") or url_for('bookmarks.index'))
             else:
                 flash('Utilisateur ou mot de passe non valide.')
 
@@ -37,7 +37,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('bookmarks.index'))
 
 
 @login_manager.user_loader

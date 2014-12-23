@@ -22,7 +22,7 @@
                         <p>{{ bookmark.description }}</p>
                         <p>
                             {% for tag in bookmark.tags %}
-                            <a href="{{ url_for('main.bookmarks_by_tags', tag=tag) }}" class="btn btn-success btn-xs">{{ tag }}</a>
+                            <a href="{{ url_for('bookmarks.bookmarks_by_tags', tag=tag) }}" class="btn btn-success btn-xs">{{ tag }}</a>
                             {% endfor %}
                         </p>
                     </div>
@@ -34,7 +34,7 @@
     <div class="col-md-3 sidebar right-menu">
         <h3>Tags <span class="foreground-private">privé</span></h3>
         {% for tag in tags %}
-            <a href="{{ url_for('main.bookmarks_by_tags', tag=tag._id) }}" class="tag-cloud label label-success">{{ tag._id }}</a>
+            <a href="{{ url_for('bookmarks.bookmarks_by_tags', tag=tag._id) }}" class="tag-cloud label label-success">{{ tag._id }}</a>
         {% endfor %}
         <h3>Utilisateurs <span class="green">actif</span></h3>
         {% for user in users %}

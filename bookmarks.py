@@ -1,20 +1,20 @@
 import datetime
+
 from bson import ObjectId, SON
-
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask.ext.login import login_required, login_user, logout_user, current_user
+from flask import Blueprint, render_template, request, flash
+from flask.ext.login import login_required, login_user, current_user
 import pymongo
-from auth import bcrypt, User
 
+from auth import bcrypt, User
 from database import mongo, add_constraint_to_criteria
 from forms.bookmark import BookmarkForm
 from forms.login import LoginForm
 
 
-main = Blueprint('main', __name__)
+bookmarks = Blueprint('bookmarks', __name__)
 
-@main.route('/', endpoint='index', methods=['GET', 'POST'])
-@main.route('/bookmarks', endpoint='bookmarks', methods=['GET', 'POST'])
+@bookmarks.route('/', endpoint='index', methods=['GET', 'POST'])
+@bookmarks.route('/bookmarks', endpoint='bookmarks', methods=['GET', 'POST'])
 def index():
     form = LoginForm()
 
@@ -26,14 +26,14 @@ def index():
     return render_template('bookmarks.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
-@main.route('/my/bookmarks')
+@bookmarks.route('/my/bookmarks')
 def private_bookmarks():
     criteria = {'user._id': ObjectId(current_user.get_id())}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
     return render_template('my_bookmarks.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users())
 
 
-@main.route('/bookmarks/tag/<tag>', methods=['GET', 'POST'])
+@bookmarks.route('/bookmarks/tag/<tag>', methods=['GET', 'POST'])
 def bookmarks_by_tags(tag):
     form = LoginForm()
 
@@ -45,7 +45,7 @@ def bookmarks_by_tags(tag):
     return render_template('bookmarks.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
-@main.route('/filter', methods=['POST'])
+@bookmarks.route('/filter', methods=['POST'])
 def search():
     search_criteria = {'$or': [{'title': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'description': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'tags': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'url': {'$regex': '%s' % request.form['search'], '$options': 'i'}}]}
     criteria = add_constraint_to_criteria(search_criteria, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}) if current_user.is_authenticated() else {'public': True}
@@ -70,13 +70,13 @@ def _get_top_tags(criteria):
     return mongo.db.bookmarks.aggregate([{'$match': criteria}, {'$unwind': '$tags'}, {'$group': {'_id': '$tags', 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}, {'$limit': 25}])['result']
 
 
-@main.route('/bookmarklet')
+@bookmarks.route('/bookmarklet')
 @login_required
 def bookmarklet():
     return render_template('bookmarklet.html', form=BookmarkForm(request.args))
 
 
-@main.route('/bookmark', methods=['POST'])
+@bookmarks.route('/bookmark', methods=['POST'])
 @login_required
 def add_bookmark():
     form = BookmarkForm()

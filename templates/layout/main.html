@@ -10,14 +10,14 @@
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
-            <div class="navbar-header"><a class="navbar-brand" href="{{url_for('main.index')}}">marke.me</a></div>
+            <div class="navbar-header"><a class="navbar-brand" href="{{url_for('bookmarks.index')}}">marke.me</a></div>
             <div id="navbar" class="collapse navbar-collapse">
-                <form class="navbar-form navbar-right" role="form" method="post" action="{{ url_for('main.search') }}">
+                <form class="navbar-form navbar-right" role="form" method="post" action="{{ url_for('bookmarks.search') }}">
                     <input type="text" class="form-control" placeholder="titre, description, tag, url" name="search" id="search">
                     <button type="submit" class="btn btn-success">rechercher</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{{url_for('main.bookmarks')}}">bookmarks public</a></li>
+                    <li><a href="{{url_for('bookmarks.bookmarks')}}">bookmarks public</a></li>
                     <!--<li class="active"><a href="#contact">Contact</a></li>-->
                 </ul>
             </div>
