@@ -23,14 +23,14 @@ def index():
 
     criteria = {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]} if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
-    return render_template('bookmarks.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
+    return render_template('bookmarks/public.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
 @bookmarks.route('/my/bookmarks')
 def private_bookmarks():
     criteria = {'user._id': ObjectId(current_user.get_id())}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
-    return render_template('my_bookmarks.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users())
+    return render_template('bookmarks/private.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users())
 
 
 @bookmarks.route('/bookmarks/tag/<tag>', methods=['GET', 'POST'])
@@ -42,7 +42,7 @@ def bookmarks_by_tags(tag):
 
     criteria = add_constraint_to_criteria({'tags': tag}, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}) if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
-    return render_template('bookmarks.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
+    return render_template('bookmarks/public.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
 @bookmarks.route('/filter', methods=['POST'])
@@ -50,7 +50,7 @@ def search():
     search_criteria = {'$or': [{'title': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'description': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'tags': {'$regex': '%s' % request.form['search'], '$options': 'i'}}, {'url': {'$regex': '%s' % request.form['search'], '$options': 'i'}}]}
     criteria = add_constraint_to_criteria(search_criteria, {'$or': [{'public': True}, {'user._id': ObjectId(current_user.get_id())}]}) if current_user.is_authenticated() else {'public': True}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
-    return render_template('bookmarks.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=LoginForm())
+    return render_template('bookmarks/public.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=LoginForm())
 
 
 def _validate_and_log_user(form):

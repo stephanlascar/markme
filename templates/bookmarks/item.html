@@ -1,0 +1,17 @@
+<div class="row bookmark">
+    <div class="col-md-3">
+        <a href="{{ bookmark.url|safe }}" target="_blank" class="thumbnail">
+            <img class="bookmark-avatar" src="http://custom.pagepeeker.com/thumbs.php?size=m&url={{ bookmark.url|safe }}">
+        </a>
+    </div>
+    <div class="col-md-9 caption">
+        <h4><a href="{{ bookmark.url|safe }}" target="_blank">{{ bookmark.title }}</a></h4>
+        <p class="user"><img src="{{ bookmark.user.email | gravatar }}"/> par <a href="#">{{ bookmark.user.nickname }}</a></p>
+        <p>{{ bookmark.description }}</p>
+        <p>
+            {% for tag in bookmark.tags %}
+            <a href="{{ url_for('bookmarks.bookmarks_by_tags', tag=tag) }}" class="btn btn-success btn-xs">{{ tag }}</a>
+            {% endfor %}
+        </p>
+    </div>
+</div>
