@@ -1,6 +1,7 @@
 {% extends "layout/main.html" %}
 
 {% block content %}
+    <div class="sidebar left-menu {{ 'private-left-menu col-md-2' if current_user.is_authenticated() else 'col-md-3' }}">{% include 'layout/left_menu.html' %}</div>
     <h1 class="{{ 'col-md-offset-2' if current_user.is_authenticated() else 'col-md-offset-3' }} {{ background_style }}">bookmarks {{ scope }}</h1>
     <div class="{{ 'col-md-7 col-md-offset-2' if current_user.is_authenticated() else 'col-md-6 col-md-offset-3' }} bookmarks">
         {% include 'layout/alert.html' %}

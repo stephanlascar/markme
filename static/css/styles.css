@@ -71,6 +71,12 @@ body {
     font-weight: bold;
 }
 
+.left-menu form a,
+.left-menu form a:hover,
+.left-menu form a:focus {
+    font-weight: normal;
+}
+
 .signup {
     background-color: #FF5132;
     padding: 15px;

@@ -19,4 +19,7 @@
         {{ form.remember_me }} {{ form.remember_me.label.text }}
     </label>
 </div>
+<div class="form-group">
 <button type="submit" class="btn btn-default">Se connecter</button>
+<a href="{{ url_for('auth.sign_in') }}" class="btn btn-success pull-right">créer un compte</a>
+</div>

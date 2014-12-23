@@ -9,6 +9,7 @@ from pymongo import Connection
 from pymongo.uri_parser import parse_uri
 from database import mongo
 from forms.login import LoginForm
+from forms.signin import SigninForm
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -30,7 +31,7 @@ def login():
             else:
                 flash('Utilisateur ou mot de passe non valide.')
 
-    return render_template('login.html', form=form)
+    return render_template('auth/login.html', form=form)
 
 
 @auth.route('/logout')
@@ -38,6 +39,11 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('bookmarks.index'))
+
+
+@auth.route('/signin', methods=['GET', 'POST'])
+def sign_in():
+    return render_template('auth/signin.html', form=SigninForm())
 
 
 @login_manager.user_loader

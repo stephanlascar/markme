@@ -10,14 +10,14 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
 </head>
 
-<body style="background-color: #af9877;">
+<body>
 
     <div class="container">
 
         {% include 'layout/alert.html' %}
 
         <form class="signup" role="form" method="post">
-            {% include 'layout/login_form.html' %}
+            {% include 'auth/login_form.html' %}
         </form>
 
     </div>

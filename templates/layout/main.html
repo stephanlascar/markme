@@ -26,7 +26,6 @@
 
     <div class="container-fluid main-container">
         <div class="row">
-            <div class="sidebar left-menu {{ 'private-left-menu col-md-2' if current_user.is_authenticated() else 'col-md-3' }}">{% include 'layout/left_menu.html' %}</div>
             {% block content %}{% endblock %}
         </div>
     </div>
