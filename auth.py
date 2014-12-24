@@ -43,7 +43,14 @@ def logout():
 
 @auth.route('/signin', methods=['GET', 'POST'])
 def sign_in():
-    return render_template('auth/signin.html', form=SigninForm())
+    form = SigninForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            mongo.db.users.save({'email': form.email.data, 'nickname': form.nickname.data, 'password': bcrypt.generate_password_hash(form.password.data, rounds=12), 'inserted': datetime.datetime.utcnow()})
+            flash('Vous pouvez maintenant vous connecter.')
+            return redirect(url_for('bookmarks.index'))
+
+    return render_template('auth/signin.html', form=form)
 
 
 @login_manager.user_loader
@@ -57,19 +64,3 @@ class User(UserMixin):
         self.id = args['_id']
         self.nickname = args['nickname']
         self.email = args['email']
-
-
-if __name__ == "__main__":
-    arg_parser = argparse.ArgumentParser(description='Ajoute un nouvel utilisateur')
-    arg_parser.add_argument('-e', '--email', required=True, dest="email")
-    arg_parser.add_argument('-n', '--nickname', required=True, dest="nickname")
-    arg_parser.add_argument('-p', '--password', required=True, dest="password")
-    args = arg_parser.parse_args()
-
-    mongo_uri = os.environ['MONGOLAB_URI']
-    mongo_creds = parse_uri(mongo_uri)
-    connection = Connection(mongo_creds['nodelist'][0][0], mongo_creds['nodelist'][0][1])
-    db = connection[mongo_creds['database']]
-    db.authenticate(mongo_creds['username'], mongo_creds['password'])
-
-    db.users.save({'email': args.email, 'nickname': args.nickname, 'password': bcrypt.generate_password_hash(args.password, rounds=12), 'inserted': datetime.datetime.utcnow()})
