@@ -5,9 +5,9 @@
     <h1 class="{{ 'col-md-offset-2' if current_user.is_authenticated() else 'col-md-offset-3' }} {{ background_style }}">{% block main_title %}{% endblock %}</h1>
     <div class="{{ 'col-md-7 col-md-offset-2' if current_user.is_authenticated() else 'col-md-6 col-md-offset-3' }} bookmarks">
         {% include 'layout/alert.html' %}
-        {% for group in bookmarks|group_by_date('published', '%Y-%m-%dT%H:00:00')|reverse %}
+        {% for group in bookmarks|group_by_humanize_date('published')|reverse %}
             <div class="row">
-                <h5 class="date">{{ group.grouper|humanize }}</h5>
+                <h5 class="date">{{ group.grouper }}</h5>
             </div>
 
             {% for bookmark in group.list|reverse %}

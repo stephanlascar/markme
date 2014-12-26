@@ -19,20 +19,15 @@ def create_mongo_index():
     mongo.db.users.ensure_index('nickname', pymongo.ASCENDING, background=True, unique=True)
 
 
-@app.template_filter()
-def humanize(datetime):
-    return arrow.get(datetime, 'YYYY-MM-DDTHH:00:00').humanize(locale='FR_fr')
-
-
 @environmentfilter
-def group_by_date(environment, value, attribute, date_format):
+def group_by_humanize_date(environment, value, attribute):
     sorted_collections = sorted(value, key=make_attrgetter(environment, attribute))
-    return map(_GroupTuple, groupby(sorted_collections, _make_attr_getter_for_date(environment, attribute, date_format)))
-app.jinja_env.filters['group_by_date'] = group_by_date
+    return map(_GroupTuple, groupby(sorted_collections, _make_attr_getter_for_date(environment, attribute)))
+app.jinja_env.filters['group_by_humanize_date'] = group_by_humanize_date
 
 
-def _make_attr_getter_for_date(environment, attribute, date_format):
+def _make_attr_getter_for_date(environment, attribute):
     def callback(x):
-        return environment.getitem(x, attribute).strftime(date_format)
+        return arrow.get(environment.getitem(x, attribute)).humanize(locale='FR_fr')
 
     return callback
