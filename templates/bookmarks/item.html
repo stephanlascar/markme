@@ -1,7 +1,7 @@
 <div class="row bookmark">
     <div class="col-md-3">
-        <a href="{{ bookmark.url|safe }}" target="_blank" class="thumbnail">
-            <img class="bookmark-avatar" src="http://custom.pagepeeker.com/thumbs.php?size=m&url={{ bookmark.url|safe }}">
+        <a href="{{ bookmark.url|safe }}" target="_blank" class="thumbnail {{ 'my' if current_user.id == bookmark.user._id }} {{ 'private' if not bookmark.public }}">
+            <img src="http://custom.pagepeeker.com/thumbs.php?size=m&url={{ bookmark.url|safe }}">
         </a>
     </div>
     <div class="col-md-9 caption">

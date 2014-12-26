@@ -163,7 +163,7 @@ body {
 }
 
 .bookmark {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .bookmark .user {
@@ -173,6 +173,23 @@ body {
 
 .bookmark .user img {
     max-height: 20px;
+}
+
+.bookmark .thumbnail {
+    margin-bottom: 0;
+}
+
+.bookmark .thumbnail.private {
+    background-color: rgba(255, 81, 50, 0.2);
+}
+
+.bookmark .thumbnail.my {
+    border-color: #FF5132;
+}
+
+.bookmark .thumbnail.my:hover,
+.bookmark .thumbnail.my:focus {
+    border-color: #337ab7;
 }
 
 .bookmark .user a,
