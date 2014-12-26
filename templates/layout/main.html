@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>marke.me</title>
+    <title>mark.me</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
-            <div class="navbar-header"><a class="navbar-brand" href="{{url_for('bookmarks.index')}}">marke.me</a></div>
+            <div class="navbar-header"><a class="navbar-brand" href="{{url_for('bookmarks.index')}}">mark.me</a></div>
             <div id="navbar" class="collapse navbar-collapse">
                 <form class="navbar-form navbar-right" role="form" method="post" action="{{ url_for('bookmarks.search') }}">
                     <input type="text" class="form-control" placeholder="titre, description, tag, url" name="search" id="search">
