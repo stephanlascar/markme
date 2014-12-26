@@ -26,6 +26,18 @@ def index():
     return render_template('bookmarks/public.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
+@bookmarks.route('/user/<nickname>', methods=['GET', 'POST'])
+def public_user_bookmarks(nickname):
+    form = LoginForm()
+
+    if request.method == 'POST':
+        _validate_and_log_user(form)
+
+    criteria = {'$and': [{'public': True}, {'user.nickname': nickname}]}
+    bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
+    return render_template('bookmarks/user.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form, nickname=nickname)
+
+
 @bookmarks.route('/my/bookmarks')
 def private_bookmarks():
     criteria = {'user._id': ObjectId(current_user.get_id())}
@@ -63,7 +75,7 @@ def _validate_and_log_user(form):
 
 
 def _get_most_active_users():
-    return mongo.db.bookmarks.aggregate([{"$group": {"_id": {"nickname": "$user.nickname", "email": "$user.email"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}])['result']
+    return mongo.db.bookmarks.aggregate([{'$group': {'_id': {'nickname': '$user.nickname', 'email': '$user.email'}, 'count': {'$sum': 1}}}, {'$sort': SON([('count', -1), ('_id', -1)])}])['result']
 
 
 def _get_top_tags(criteria):

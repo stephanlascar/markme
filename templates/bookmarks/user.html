@@ -1,0 +1,5 @@
+{% extends "bookmarks/list.html" %}
+
+{% block main_title %}bookmarks public <small>de {{ nickname }}</small>{% endblock %}
+{% block tags_title %}tags <span class="foreground-public">public</span> de {{ nickname }}{% endblock %}
+{% set background_style = 'background-public' %}

@@ -122,6 +122,11 @@ body {
     z-index: 999;
 }
 
+.row h1 small {
+    font-size: 12px;
+    font-weight: bold;
+}
+
 .bookmarks {
     margin-top: 33px;
 }

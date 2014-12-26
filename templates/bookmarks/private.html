@@ -1,5 +1,5 @@
 {% extends "bookmarks/list.html" %}
 
-{% set scope = 'privé' %}
+{% block main_title %}bookmarks privé{% endblock %}
+{% block tags_title %}tags <span class="foreground-private">privé</span>{% endblock %}
 {% set background_style = 'background-private' %}
-{% set foreground_style = 'foreground-private' %}
