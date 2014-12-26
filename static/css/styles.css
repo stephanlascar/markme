@@ -181,6 +181,14 @@ body {
     font-weight: bold;
 }
 
+.bookmark .referrer,
+.bookmark .referrer a,
+.bookmark .referrer a:hover,
+.bookmark .referrer a:focus {
+    font-weight: normal;
+    color: #666;
+}
+
 .right-menu {
     box-shadow: -2px 0 9px 0 #656565;
     background-color: white;

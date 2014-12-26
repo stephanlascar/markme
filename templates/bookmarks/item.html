@@ -6,7 +6,12 @@
     </div>
     <div class="col-md-9 caption">
         <h4><a href="{{ bookmark.url|safe }}" target="_blank">{{ bookmark.title }}</a></h4>
-        <p class="user"><img src="{{ bookmark.user.email | gravatar }}"/> par <a href="#">{{ bookmark.user.nickname }}</a></p>
+        <p class="user">
+            <img src="{{ bookmark.user.email | gravatar }}"/> par <a href="#">{{ bookmark.user.nickname }}</a>
+            {% if bookmark.referrer %}
+                <span class="referrer">(<a href="{{ bookmark.referrer }}" target="_blank">via</a>)</span>
+            {% endif %}
+        </p>
         <p>{{ bookmark.description }}</p>
         <p>
             {% for tag in bookmark.tags %}
