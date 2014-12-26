@@ -1,15 +1,15 @@
-import argparse
+# -*- coding: utf-8 -*-
 import datetime
-import os
+
 from bson import ObjectId
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.login import LoginManager, UserMixin, login_user, login_required, logout_user
-from pymongo import Connection
-from pymongo.uri_parser import parse_uri
+
 from database import mongo
 from forms.login import LoginForm
 from forms.signin import SigninForm
+
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -26,8 +26,12 @@ def login():
         if form.validate_on_submit():
             mongo_user = mongo.db.users.find_one({'email': form.email.data})
             if mongo_user and bcrypt.check_password_hash(mongo_user['password'], form.password.data):
-                login_user(User(mongo_user), remember=form.remember_me.data)
-                return redirect(request.args.get("next") or url_for('bookmarks.index'))
+                if login_user(User(mongo_user), remember=form.remember_me.data):
+                    mongo_user['last_login'] = datetime.datetime.utcnow()
+                    mongo.db.users.save(mongo_user)
+                    return redirect(request.args.get('next') or url_for('bookmarks.index'))
+                else:
+                    flash(u'Désolé, mais vous ne pouvez pas vous connecter. Contacter l\'administrateur du site.')
             else:
                 flash('Utilisateur ou mot de passe non valide.')
 
