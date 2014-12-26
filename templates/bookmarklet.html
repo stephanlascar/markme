@@ -12,22 +12,22 @@
         <form class="form-horizontal" role="form" method="post" action="{{url_for('bookmarks.add_bookmark')}}">
             {{ form.hidden_tag() }}
 
-            <div class="form-group">
+            <div class="form-group {% if form.title.errors %}has-error{% endif %}">
                 {{ form.title.label(class='col-sm-1 control-label') }}
                 <div class="col-sm-11">
                     {{ form.title(required=true, class='form-control') }}
                     {% if form.title.errors %}
-                        {{ form.title.errors|join(', ') }}
+                        <span class="help-block">{{ form.title.errors|join(', ') }}</span>
                     {% endif %}
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group {% if form.url.errors %}has-error{% endif %}">
                 {{ form.url.label(class='col-sm-1 control-label') }}
                 <div class="col-sm-11">
                     {{ form.url(required=true, class='form-control') }}
                     {% if form.title.errors %}
-                        {{ form.url.errors|join(', ') }}
+                        <span class="help-block">{{ form.url.errors|join(', ') }}</span>
                     {% endif %}
                 </div>
             </div>
@@ -39,10 +39,13 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group {% if form.description.errors %}has-error{% endif %}">
                 {{ form.description.label(class='col-sm-1 control-label') }}
                 <div class="col-sm-11">
                     {{ form.description(rows=10, class='form-control') }}
+                    {% if form.description.errors %}
+                        <span class="help-block">{{ form.description.errors|join(', ') }}</span>
+                    {% endif %}
                 </div>
             </div>
 

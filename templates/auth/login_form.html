@@ -4,14 +4,14 @@
     {{ form.email.label(class="control-label") }}
     {{ form.email(class="form-control") }}
     {% if form.email.errors %}
-    <span class="help-block">{{ form.email.errors|join(', ') }}</span>
+        <span class="help-block">{{ form.email.errors|join(', ') }}</span>
     {% endif %}
 </div>
 <div class="form-group {% if form.password.errors %}has-error{% endif %}">
     {{ form.password.label(class="control-label") }}
     {{ form.password(class="form-control") }}
     {% if form.password.errors %}
-    <span class="help-block">{{ form.password.errors|join(', ') }}</span>
+        <span class="help-block">{{ form.password.errors|join(', ') }}</span>
     {% endif %}
 </div>
 <div class="checkbox">
