@@ -22,8 +22,17 @@
             <a href="{{ url_for('bookmarks.bookmarks_by_tags', tag=tag._id) }}" class="tag-cloud label label-success">{{ tag._id }}</a>
         {% endfor %}
         <h3>Utilisateurs <span class="foreground-public">actif</span></h3>
-        {% for user in users %}
-            <p class="most-active-user"><img src="{{ user._id.email | gravatar }}"/><a href="{{ url_for('bookmarks.public_user_bookmarks', nickname=user._id.nickname) }}">{{ user._id.nickname }}</a></p>
-        {% endfor %}
+        <ul class="most-active-users">
+
+            {% for user in users %}
+                <li>
+                    <img src="{{ user._id.email | gravatar }}"/>
+                    <div>
+                        <a href="{{ url_for('bookmarks.public_user_bookmarks', nickname=user._id.nickname) }}">{{ user._id.nickname }}</a>
+                        <br/>dernier bookmark : {{ user.last_bookmark.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
 {% endblock %}

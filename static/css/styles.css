@@ -212,14 +212,25 @@ body {
     margin-top: 0;
 }
 
-.right-menu .most-active-user img {
-    max-height: 40px;
-    margin-right: 10px;
+.right-menu .most-active-users {
+    list-style-type: none;
+    padding: 0;
 }
 
-.right-menu .most-active-user a,
-.right-menu .most-active-user a:hover,
-.right-menu .most-active-user a:focus {
+.right-menu .most-active-users li {
+    margin-bottom: 10px;
+}
+
+.right-menu .most-active-users img {
+    max-height: 40px;
+    margin-right: 10px;
+    float: left;
+    clear: both;
+}
+
+.right-menu .most-active-users a,
+.right-menu .most-active-users a:hover,
+.right-menu .most-active-users a:focus {
     font-size: 14px;
     font-weight: bold;
     color: #666;
