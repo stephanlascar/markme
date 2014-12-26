@@ -1,7 +1,7 @@
 import datetime
 
 from bson import ObjectId, SON
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, current_app
 from flask.ext.login import login_required, login_user, current_user
 import pymongo
 
@@ -39,6 +39,7 @@ def public_user_bookmarks(nickname):
 
 
 @bookmarks.route('/my/bookmarks')
+@login_required
 def private_bookmarks():
     criteria = {'user._id': ObjectId(current_user.get_id())}
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
@@ -56,6 +57,12 @@ def bookmarks_by_tags(tag):
     bookmarks = mongo.db.bookmarks.find(criteria).sort('date', pymongo.DESCENDING)
     return render_template('bookmarks/public.html', bookmarks=bookmarks, tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
+@bookmarks.route('/my/tags')
+@login_required
+def private_tags():
+    criteria = {'user._id': ObjectId(current_user.get_id())}
+    tags = mongo.db.bookmarks.find(criteria).distinct('tags')
+    return render_template('tags/private.html', my_tags=tags, tags=_get_top_tags(criteria), users=_get_most_active_users())
 
 @bookmarks.route('/filter', methods=['POST'])
 def search():
