@@ -15,7 +15,7 @@
         <p>{{ bookmark.description }}</p>
         <p>
             {% for tag in bookmark.tags %}
-            <a href="{{ url_for('bookmarks.bookmarks_by_tags', tag=tag) }}" class="btn btn-success btn-xs">{{ tag }}</a>
+                <a href="{{ url_for('bookmarks.bookmarks_by_tags', tag=tag) }}" class="label label-success">{{ tag }}</a>
             {% endfor %}
         </p>
     </div>
