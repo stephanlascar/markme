@@ -268,3 +268,31 @@ body {
 .foreground-private {
     color: #FF5132;
 }
+
+.tools .nav {
+    margin-top: 50px;
+}
+
+.tools .nav li {
+    margin-bottom: 10px;
+}
+
+.tools .nav a {
+    height: 78px;
+    line-height: 58px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    background-color: #535353;
+    text-align: center;
+}
+
+.tools .nav a:hover,
+.tools .nav a:focus {
+    background-color: #FF5132;
+}
+
+.tools .nav li.active a {
+    background-color: #FF5132;
+}

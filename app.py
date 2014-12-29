@@ -5,6 +5,7 @@ from flask.ext.gravatar import Gravatar
 from database import mongo
 from auth import login_manager, bcrypt, auth
 from bookmarks import bookmarks
+from tools import tools
 
 
 def create_app():
@@ -20,4 +21,5 @@ def create_app():
 
     app.register_blueprint(auth)
     app.register_blueprint(bookmarks)
+    app.register_blueprint(tools, url_prefix='/tools')
     return app
