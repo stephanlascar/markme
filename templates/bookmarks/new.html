@@ -1,0 +1,30 @@
+{% extends "layout/main.html" %}
+
+{% block content %}
+    <div class="sidebar left-menu private-left-menu col-md-2">{% include 'layout/left_menu.html' %}</div>
+    <h1 class="col-md-offset-2 background-private">nouveau bookmark</h1>
+    <div class="col-md-7 col-md-offset-2 bookmarks">
+        <form class="form-horizontal" role="form" method="post" action="{{ url_for('bookmarks.new_bookmark') }}">
+            {% include 'form/bookmark.html' %}
+        </form>
+    </div>
+    <div class="col-md-3 sidebar right-menu">
+        <h3>{% block tags_title %}{% endblock %}</span></h3>
+        {% for tag in tags %}
+            <a href="{{ url_for('bookmarks.bookmarks_by_tags', tag=tag._id) }}" class="tag-cloud label label-success">{{ tag._id }}</a>
+        {% endfor %}
+        <h3>Utilisateurs <span class="foreground-public">actif</span></h3>
+        <ul class="most-active-users">
+
+            {% for user in users %}
+                <li>
+                    <img src="{{ user._id.email | gravatar }}"/>
+                    <div>
+                        <a href="{{ url_for('bookmarks.public_user_bookmarks', nickname=user._id.nickname) }}">{{ user._id.nickname }}</a>
+                        <br/>dernier bookmark : {{ user.last_bookmark.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

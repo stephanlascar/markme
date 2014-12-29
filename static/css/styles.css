@@ -162,6 +162,14 @@ body {
     font-weight: bold;
 }
 
+.bookmarks form {
+    margin-top: 20px;
+}
+
+.bookmarks .alert {
+    margin-top: 20px;
+}
+
 .bookmark {
     margin-bottom: 20px;
 }
