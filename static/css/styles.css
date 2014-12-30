@@ -215,6 +215,12 @@ body {
     color: #666;
 }
 
+.bookmark ul a,
+.bookmark ul a:hover,
+.bookmark ul a:focus {
+    color: #666;
+}
+
 .right-menu {
     box-shadow: -2px 0 9px 0 #656565;
     background-color: white;

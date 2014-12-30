@@ -122,16 +122,23 @@ def new_bookmark():
     return render_template('bookmarks/new.html', tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
+@bookmarks.route('/bookmarks/delete/<bookmark_id>', methods=['GET', 'POST'])
+@login_required
+def delete_bookmark(bookmark_id):
+    mongo.db.bookmarks.remove({'_id': ObjectId(bookmark_id), 'user._id': ObjectId(current_user.get_id())})
+    return redirect(url_for('.index'))
+
+
 def _save_bookmark(bookmark_form):
     mongo.db.bookmarks.save({'title': bookmark_form.title.data,
-                                     'url': bookmark_form.url.data,
-                                     'description': bookmark_form.description.data,
-                                     'referrer': bookmark_form.referrer.data,
-                                     'tags': bookmark_form.tags.data,
-                                     'published': datetime.datetime.utcnow(),
-                                     'public': bookmark_form.public.data,
-                                     'user': {
-                                         '_id': ObjectId(current_user.get_id()),
-                                         'nickname': current_user.nickname,
-                                         'email': current_user.email
-                                     }})
+                             'url': bookmark_form.url.data,
+                             'description': bookmark_form.description.data,
+                             'referrer': bookmark_form.referrer.data,
+                             'tags': bookmark_form.tags.data,
+                             'published': datetime.datetime.utcnow(),
+                             'public': bookmark_form.public.data,
+                             'user': {
+                                 '_id': ObjectId(current_user.get_id()),
+                                 'nickname': current_user.nickname,
+                                 'email': current_user.email
+                             }})

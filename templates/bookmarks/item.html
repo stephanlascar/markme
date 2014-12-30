@@ -18,5 +18,10 @@
                 <a href="{{ url_for('bookmarks.bookmarks_by_tags', tag=tag) }}" class="label label-success">{{ tag }}</a>
             {% endfor %}
         </p>
+        {% if current_user.id == bookmark.user._id %}
+            <ul class="list-inline">
+                <li><a href="{{ url_for('bookmarks.delete_bookmark', bookmark_id=bookmark._id) }}">Supprimer</a></li>
+            </ul>
+        {% endif %}
     </div>
 </div>
