@@ -267,6 +267,12 @@ body {
     color: #666;
 }
 
+.right-menu form a,
+.right-menu form a:hover,
+.right-menu form a:focus {
+    color: #FF5132;
+}
+
 .foreground-public {
     color: #5cb85c;
 }

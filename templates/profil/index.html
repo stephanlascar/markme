@@ -1,0 +1,69 @@
+{% extends "profil/common.html" %}
+{% set active_page = "general" %}
+
+{% block profil_content %}
+    {% include 'layout/alert.html' %}
+
+    <h3>général</h3>
+    <form class="form-horizontal" role="form" method="post" action="{{url_for('profil.index')}}">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group {% if form.nickname.errors %}has-error{% endif %}">
+            {{ form.nickname.label(class='col-sm-3 control-label') }}
+            <div class="col-sm-9">
+                {{ form.nickname(required=true, class='form-control') }}
+                {% if form.nickname.errors %}
+                    <span class="help-block">{{ form.nickname.errors|join(', ') }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+            {{ form.email.label(class='col-sm-3 control-label') }}
+            <div class="col-sm-9">
+                {{ form.email(required=true, class='form-control') }}
+                <span class="help-block">Si vous avez un gravatar enregistré sur <a href="http://www.gravatar.com" target="_blank">gravatar.com</a>, entrez une adresse email correspondante.</span>
+                {% if form.email.errors %}
+                    <span class="help-block">{{ form.email.errors|join(', ') }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group {% if form.actual_password.errors %}has-error{% endif %}">
+            {{ form.actual_password.label(class='col-sm-3 control-label') }}
+            <div class="col-sm-9">
+                {{ form.actual_password(class='form-control') }}
+                {% if form.actual_password.errors %}
+                    <span class="help-block">{{ form.actual_password.errors|join(', ') }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group {% if form.new_password.errors %}has-error{% endif %}">
+            {{ form.new_password.label(class='col-sm-3 control-label') }}
+            <div class="col-sm-9">
+                {{ form.new_password(class='form-control') }}
+                {% if form.new_password.errors %}
+                    <span class="help-block">{{ form.new_password.errors|join(', ') }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group {% if form.confirm_new_password.errors %}has-error{% endif %}">
+            {{ form.confirm_new_password.label(class='col-sm-3 control-label') }}
+            <div class="col-sm-9">
+                {{ form.confirm_new_password(class='form-control') }}
+                {% if form.confirm_new_password.errors %}
+                    <span class="help-block">{{ form.confirm_new_password.errors|join(', ') }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}

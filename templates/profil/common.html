@@ -1,0 +1,17 @@
+{% extends "layout/main.html" %}
+
+{% block content %}
+    <div class="sidebar left-menu private-left-menu col-md-2">{% include 'layout/left_menu.html' %}</div>
+    <h1 class="col-md-offset-2 background-private">outils</h1>
+    <div class="col-md-4 col-md-offset-2 bookmarks tools">
+        <ul class="nav">
+            <li {% if active_page=="general" %} class="active"{% endif %}><a href="{{ url_for('profil.index') }}">general</a></li>
+            <li><a href="#">blog</a></li>
+        </ul>
+    </div>
+
+    <div class="col-md-6 sidebar right-menu">
+        {% block profil_content %}{% endblock %}
+    </div>
+
+{% endblock %}
