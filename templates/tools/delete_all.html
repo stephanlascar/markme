@@ -1,0 +1,18 @@
+{% extends "tools/common.html" %}
+{% set active_page = "delete_all" %}
+
+{% block tools_content %}
+    <div class="col-md-6 sidebar right-menu">
+        <h3>vider</h3>
+        <form class="form-horizontal" role="form" method="post" action="{{ url_for('tools.delete_all') }}">
+
+            <p>Voulez-vous supprimer tout vos bookmarks ?</p>
+
+            <div class="form-group ">
+                <div class="col-sm-11">
+                    <button type="submit" class="btn btn-warning">Supprimer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

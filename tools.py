@@ -1,14 +1,8 @@
-import datetime
-
-from bson import ObjectId, SON
-from flask import Blueprint, render_template, request, flash, current_app
-from flask.ext.login import login_required, login_user, current_user
-import pymongo
-
-from auth import bcrypt, User
-from database import mongo, add_constraint_to_criteria
-from forms.bookmark import BookmarkForm
-from forms.login import LoginForm
+# -*- coding: utf-8 -*-
+from bson import ObjectId
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask.ext.login import login_required, current_user
+from database import mongo
 
 
 tools = Blueprint('tools', __name__)
@@ -18,3 +12,15 @@ tools = Blueprint('tools', __name__)
 @login_required
 def index():
     return render_template('tools/index.html')
+
+
+@tools.route('/delete_all', methods=['GET', 'POST'])
+@login_required
+def delete_all():
+    if request.method == 'POST':
+        mongo.db.bookmarks.remove({'user._id': ObjectId(current_user.get_id())})
+        flash(u'Tout vos bookmarks ont été supprimés !')
+        return redirect(url_for('bookmarks.index'))
+
+    return render_template('tools/delete_all.html')
+
