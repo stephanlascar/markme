@@ -19,6 +19,8 @@ def create_mongo_index():
     mongo.db.bookmarks.ensure_index('title', pymongo.ASCENDING, background=True)
     mongo.db.bookmarks.ensure_index('description', background=True)
     mongo.db.bookmarks.ensure_index('tags', pymongo.ASCENDING, background=True)
+    mongo.db.bookmarks.ensure_index([('user._id', pymongo.ASCENDING), ('url', pymongo.ASCENDING)], background=True, unique=True)
+
     mongo.db.users.ensure_index('email', pymongo.ASCENDING, background=True, unique=True)
     mongo.db.users.ensure_index('nickname', pymongo.ASCENDING, background=True, unique=True)
 
