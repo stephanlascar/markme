@@ -2,7 +2,7 @@
 import datetime
 
 from bson import ObjectId, SON
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from flask.ext.login import login_required, login_user, current_user
 import pymongo
 
@@ -95,7 +95,10 @@ def _get_top_tags(criteria):
 @bookmarks.route('/bookmarklet')
 @login_required
 def bookmarklet():
-    return render_template('bookmarklet.html', form=BookmarkForm(request.args))
+    criteria = {'user._id': ObjectId(current_user.get_id()), 'url': request.args.get('url', None)}
+    bookmark = mongo.db.bookmarks.find_one(criteria)
+    form = BookmarkForm(title=bookmark['title'], url=bookmark['url'], description=bookmark['description'], tags=bookmark['tags'], public=bookmark['public'], referrer=bookmark['referrer']) if bookmark else BookmarkForm(request.args)
+    return render_template('bookmarklet.html', form=form)
 
 
 @bookmarks.route('/bookmark', methods=['POST'])
@@ -130,15 +133,18 @@ def delete_bookmark(bookmark_id):
 
 
 def _save_bookmark(bookmark_form):
-    mongo.db.bookmarks.save({'title': bookmark_form.title.data,
-                             'url': bookmark_form.url.data,
-                             'description': bookmark_form.description.data,
-                             'referrer': bookmark_form.referrer.data,
-                             'tags': bookmark_form.tags.data,
-                             'published': datetime.datetime.utcnow(),
-                             'public': bookmark_form.public.data,
-                             'user': {
-                                 '_id': ObjectId(current_user.get_id()),
-                                 'nickname': current_user.nickname,
-                                 'email': current_user.email
-                             }})
+    mongo.db.bookmarks.update({'url': bookmark_form.title.data, 'user': {'_id': ObjectId(current_user.get_id())}},
+                              {'$set': {
+                                  'title': bookmark_form.title.data,
+                                  'url': bookmark_form.url.data,
+                                  'description': bookmark_form.description.data,
+                                  'referrer': bookmark_form.referrer.data,
+                                  'tags': bookmark_form.tags.data,
+                                  'published': datetime.datetime.utcnow(),
+                                  'public': bookmark_form.public.data,
+                                  'user': {
+                                      '_id': ObjectId(current_user.get_id()),
+                                      'nickname': current_user.nickname,
+                                      'email': current_user.email
+                                  }
+                              }}, upsert=True)
