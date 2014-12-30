@@ -20,6 +20,7 @@
         </p>
         {% if current_user.id == bookmark.user._id %}
             <ul class="list-inline">
+                <li><a href="{{ url_for('bookmarks.edit_bookmark', bookmark_id=bookmark._id) }}">Éditer</a></li>
                 <li><a href="{{ url_for('bookmarks.delete_bookmark', bookmark_id=bookmark._id) }}">Supprimer</a></li>
             </ul>
         {% endif %}
