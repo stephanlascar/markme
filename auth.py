@@ -50,7 +50,10 @@ def sign_in():
     form = SigninForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            mongo.db.users.save({'email': form.email.data, 'nickname': form.nickname.data, 'password': bcrypt.generate_password_hash(form.password.data, rounds=12), 'inserted': datetime.datetime.utcnow()})
+            user_id = mongo.db.users.save({'email': form.email.data, 'nickname': form.nickname.data, 'password': bcrypt.generate_password_hash(form.password.data, rounds=12), 'inserted': datetime.datetime.utcnow(), 'last_login': datetime.datetime.utcnow()})
+            if login_user(User({'_id': user_id, 'nickname': form.nickname.data, 'email': form.email.data}), remember=True):
+                return redirect(url_for('bookmarks.index'))
+
             flash('Vous pouvez maintenant vous connecter.')
             return redirect(url_for('bookmarks.index'))
 
