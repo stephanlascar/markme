@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 import datetime
+import urllib2
 
 from bson import ObjectId, SON
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
+import flask
 from flask.ext.login import login_required, login_user, current_user
+import gridfs
 import pymongo
+import tempfile
+import subprocess
 
 from auth import bcrypt, User
 from database import mongo, add_constraint_to_criteria
@@ -142,8 +147,39 @@ def edit_bookmark(bookmark_id):
     return render_template('bookmarks/new.html', tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
+@bookmarks.route('/bookmark/screenshot/<screenshot_id>')
+def get_screenshot(screenshot_id):
+    _file = gridfs.GridFS(mongo.db).get(ObjectId(screenshot_id))
+    response = flask.make_response(_file.read())
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Content-Type'] = 'image/png'
+    response.headers['Content-Disposition'] = 'attachment;filename={screenshot_id}.png'.format(screenshot_id=screenshot_id)
+    return response
+
+
+@bookmarks.route('/bookmark/pdf/<pdf_id>')
+def get_pdf(pdf_id):
+    # mongo.send_file()
+    _file = gridfs.GridFS(mongo.db).get(ObjectId(pdf_id))
+    response = flask.make_response(_file.read())
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment;filename={pdf_id}.png'.format(pdf_id=pdf_id)
+    return response
+
+
 def _save_bookmark(bookmark_form):
-    mongo.db.bookmarks.update({'url': bookmark_form.title.data, 'user': {'_id': ObjectId(current_user.get_id())}},
+    response = urllib2.urlopen(bookmark_form.url.data)
+    html = response.read()
+    response.close()
+
+    pdf_file = gridfs.GridFS(mongo.db).put(_html_to_pdf(html), url=bookmark_form.url.data)
+    png_file = gridfs.GridFS(mongo.db).put(_html_to_png(html), url=bookmark_form.url.data)
+
+    # mongo.save_file(filename='', fileobj=_html_to_pdf(html), content_type='application/pdf')
+    # mongo.save_file(filename='', fileobj=_html_to_png(html), content_type='image/png')
+
+    mongo.db.bookmarks.update({'url': bookmark_form.url.data, 'user': {'_id': ObjectId(current_user.get_id())}},
                               {'$set': {
                                   'title': bookmark_form.title.data,
                                   'url': bookmark_form.url.data,
@@ -152,9 +188,43 @@ def _save_bookmark(bookmark_form):
                                   'tags': bookmark_form.tags.data,
                                   'published': datetime.datetime.utcnow(),
                                   'public': bookmark_form.public.data,
+                                  #'pdf': pdf_file,
+                                  #'screenshot': png_file,
                                   'user': {
                                       '_id': ObjectId(current_user.get_id()),
                                       'nickname': current_user.nickname,
                                       'email': current_user.email
                                   }
                               }}, upsert=True)
+
+
+def _html_to_pdf(html):
+    html_tmp = tempfile.NamedTemporaryFile(mode='w+b', dir='scripts', suffix='.html')
+    pdf_tmp = tempfile.NamedTemporaryFile(mode='r+b', suffix='.pdf')
+
+    phantom_cmd = ['phantomjs', 'scripts/rasterize_pdf.js', '%s' % html_tmp.name, '%s' % pdf_tmp.name]
+
+    try:
+        html_tmp.write(html)
+        html_tmp.flush()
+        subprocess.call(phantom_cmd)  # TODO check 0
+        return pdf_tmp.read()
+    finally:
+        html_tmp.close()
+        pdf_tmp.close()
+
+
+def _html_to_png(html):
+    html_tmp = tempfile.NamedTemporaryFile(mode='w+b', dir='scripts', suffix='.html')
+    png_tmp = tempfile.NamedTemporaryFile(mode='r+b', suffix='.png')
+
+    phantom_cmd = ['phantomjs', 'scripts/rasterize_pdf.js', '%s' % html_tmp.name, '%s' % png_tmp.name]
+
+    try:
+        html_tmp.write(html)
+        html_tmp.flush()
+        subprocess.call(phantom_cmd)  # TODO check 0
+        return png_tmp.read()
+    finally:
+        html_tmp.close()
+        png_tmp.close()
