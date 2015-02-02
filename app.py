@@ -11,9 +11,9 @@ from tools import tools
 
 def create_app():
     app = Flask(__name__)
-    app.config['DEBUG'] = True
+    app.config['DEBUG'] = os.environ.get('DEBUG', False)
     app.config['MONGO_URI'] = os.environ['MONGOLAB_URI']
-    app.secret_key = 'mon secret'
+    app.secret_key = os.environ['SECRET_KEY']
     Babel(default_locale='fr').init_app(app)
     Gravatar().init_app(app)
     mongo.init_app(app)
