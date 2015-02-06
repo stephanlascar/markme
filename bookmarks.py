@@ -143,7 +143,7 @@ def edit_bookmark(bookmark_id):
 
 
 def _save_bookmark(bookmark_form):
-    mongo.db.bookmarks.update({'url': bookmark_form.url.data, 'user': {'_id': ObjectId(current_user.get_id())}},
+    mongo.db.bookmarks.update({'url': bookmark_form.url.data, 'user._id': ObjectId(current_user.get_id())},
                               {'$set': {
                                   'title': bookmark_form.title.data,
                                   'url': bookmark_form.url.data,
