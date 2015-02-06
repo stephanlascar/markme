@@ -1,20 +1,14 @@
 # -*- coding: utf-8 -*-
-import os
 from StringIO import StringIO
-from bson import ObjectId
 import datetime
-from flask.ext.testing import TestCase
+from bson import ObjectId
 from nose.tools import assert_equal
 from auth import bcrypt
 from database import mongo
-import markme
-from tests import mongo_data
+from tests import mongo_data, WebAppTestCase
 
 
-class TestTools(TestCase):
-
-    def create_app(self):
-        return markme.create_app(os.environ['MONGO_UNITTEST_URI'], debug=True, testing=True)
+class TestTools(WebAppTestCase):
 
     @mongo_data(users=[{'email': 'foo@bar.com', 'nickname': 'james', 'password': bcrypt.generate_password_hash('password', rounds=12)}])
     def test_index(self):
@@ -24,10 +18,7 @@ class TestTools(TestCase):
         self.assertTemplateUsed('tools/index.html')
 
 
-class TestDeleteAllBookmarks(TestCase):
-
-    def create_app(self):
-        return markme.create_app(os.environ['MONGO_UNITTEST_URI'], debug=True, testing=True)
+class TestDeleteAllBookmarks(WebAppTestCase):
 
     @mongo_data(users=[{'email': 'foo@bar.com', 'nickname': 'james', 'password': bcrypt.generate_password_hash('password', rounds=12)}])
     def test_display_delete_all_bookmarks(self):
@@ -50,10 +41,7 @@ class TestDeleteAllBookmarks(TestCase):
                      [{'url': 'http://www.foo.com', 'user': {'_id': ObjectId('5495f2a88766017d44130bb6'), 'email': 'tony@stark.com'}}])
 
 
-class TestImportBookmarks(TestCase):
-
-    def create_app(self):
-        return markme.create_app(os.environ['MONGO_UNITTEST_URI'], debug=True, testing=True)
+class TestImportBookmarks(WebAppTestCase):
 
     @mongo_data(users=[{'email': 'foo@bar.com', 'nickname': 'james', 'password': bcrypt.generate_password_hash('password', rounds=12)}])
     def test_display_import_bookmark(self):
@@ -69,6 +57,7 @@ class TestImportBookmarks(TestCase):
         response = self.client.post('/tools/import', data=dict(atom_file=(StringIO(XML_FILE_CONTENT), 'bookmarks.xml')))
         self.assert200(response)
         self.assertTemplateUsed('tools/import.html')
+        self.assert_flashes(u'Fichier importé avec succès !')
         self.assertEqual(5, mongo.db.bookmarks.find().count())
 
         self.assertEqual({
