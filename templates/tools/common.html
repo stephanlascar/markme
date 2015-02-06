@@ -6,9 +6,9 @@
     <div class="col-md-4 col-md-offset-2 bookmarks tools">
         <ul class="nav">
             <li {% if active_page=="bookmarklet" %} class="active"{% endif %}><a href="{{ url_for('tools.index') }}">bookmarklet</a></li>
-            <li><a href="#">importer</a></li>
+            <li {% if active_page=="import_bookmarks" %} class="active"{% endif %}><a href="{{ url_for('tools.import_bookmarks') }}">importer</a></li>
             <li><a href="#">exporter</a></li>
-            <li {% if active_page=="delete_all" %} class="active"{% endif %}><a href="{{ url_for('tools.delete_all') }}">vider</a></li>
+            <li {% if active_page=="delete_all_bookmarks" %} class="active"{% endif %}><a href="{{ url_for('tools.delete_all_bookmarks') }}">vider</a></li>
         </ul>
     </div>
 

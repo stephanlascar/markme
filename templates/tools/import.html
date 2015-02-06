@@ -1,0 +1,23 @@
+{% extends "tools/common.html" %}
+{% set active_page = "import_bookmarks" %}
+
+{% block tools_content %}
+    <div class="col-md-6 sidebar right-menu">
+        <h3>importer</h3>
+
+        <form role="form" method="post" action="{{ url_for('tools.import_bookmarks') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group {% if form.atom_file.errors %}has-error{% endif %}">
+                {{ form.atom_file.label() }}
+                {{ form.atom_file }}
+                {% if form.atom_file.errors %}
+                    <p class="help-block">{{ form.atom_file.errors|join(', ') }}</p>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+{% endblock %}

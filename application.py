@@ -3,4 +3,4 @@ import os
 import markme
 
 
-app = markme.create_app(os.environ['MONGOLAB_URI'])
+app = markme.create_app(os.environ['MONGOLAB_URI'], debug=True)
