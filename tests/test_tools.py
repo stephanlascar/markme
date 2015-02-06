@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 from StringIO import StringIO
-from pprint import pprint
 from bson import ObjectId
 import datetime
 from flask.ext.testing import TestCase
