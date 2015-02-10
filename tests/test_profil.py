@@ -45,3 +45,14 @@ class TestProfil(WebAppTestCase):
         self.assertEqual({'email': 'foo@bar.com', 'nickname': 'tony'},
                          mongo.db.users.find_one({'email': 'foo@bar.com'}, {'password': 0, '_id': 0}))
         self.assertTrue(bcrypt.check_password_hash(mongo.db.users.find_one({'email': 'foo@bar.com'}, {'password': 1})['password'], 'password'))
+
+    @mongo_data(users=[{'email': 'foo@bar.com', 'nickname': 'james', 'password': bcrypt.generate_password_hash('password', rounds=12)}])
+    def test_change_all_values(self):
+        self.client.post('/', data=dict(email='foo@bar.com', password='password'))
+        response = self.client.post('/profil/', data=dict(nickname='tony', email='tony@stark.com', actual_password='password', new_password='secret', confirm_new_password='secret'))
+
+        self.assert200(response)
+        self.assertTemplateUsed('profil/index.html')
+        self.assertEqual({'email': 'tony@stark.com', 'nickname': 'tony'},
+                         mongo.db.users.find_one({'email': 'tony@stark.com'}, {'password': 0, '_id': 0}))
+        self.assertTrue(bcrypt.check_password_hash(mongo.db.users.find_one({'email': 'tony@stark.com'}, {'password': 1})['password'], 'secret'))
