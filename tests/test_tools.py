@@ -41,6 +41,24 @@ class TestDeleteAllBookmarks(WebAppTestCase):
                      [{'url': 'http://www.foo.com', 'user': {'_id': ObjectId('5495f2a88766017d44130bb6'), 'email': 'tony@stark.com'}}])
 
 
+class TestExportBookmarks(WebAppTestCase):
+
+    @mongo_data(users=[{'email': 'foo@bar.com', 'nickname': 'james', 'password': bcrypt.generate_password_hash('password', rounds=12)}])
+    def test_display_import_bookmark(self):
+        self.client.post('/', data=dict(email='foo@bar.com', password='password'))
+        response = self.client.get('/tools/export', follow_redirects=True)
+        self.assert200(response)
+        self.assertTemplateUsed('tools/export.html')
+
+    # @mongo_data(users=[{'_id': ObjectId('5495f2a88766017d44130bb1'), 'email': 'foo@bar.com', 'nickname': 'james', 'password': bcrypt.generate_password_hash('password', rounds=12)},
+    #                    {'_id': ObjectId('5495f2a88766017d44130bb6'), 'email': 'tony@stark.com', 'nickname': 'ironman', 'password': bcrypt.generate_password_hash('jarvis', rounds=12)}],
+    #             bookmarks=[{'url': 'http://www.foo.com', 'title': 'titre 1', 'referrer': 'http://a', 'description': 'description 1', 'tags': ['test', 'unitaire'], 'user': {'_id': ObjectId('5495f2a88766017d44130bb1'), 'email': 'foo@bar.com'}, 'published': datetime.datetime.now()},
+    #                        {'url': 'http://www.bar.com', 'title': 'titre 2', 'referrer': 'http://b', 'description': 'description 1', 'tags': ['tag'], 'user': {'_id': ObjectId('5495f2a88766017d44130bb1'), 'email': 'foo@bar.com'}, 'published': datetime.datetime.now()},
+    #                        {'url': 'http://www.foo.com', 'user': {'_id': ObjectId('5495f2a88766017d44130bb6'), 'email': 'tony@stark.com'}, 'published': datetime.datetime.now()}])
+    # def test_export(self):
+    #     pass
+
+
 class TestImportBookmarks(WebAppTestCase):
 
     @mongo_data(users=[{'email': 'foo@bar.com', 'nickname': 'james', 'password': bcrypt.generate_password_hash('password', rounds=12)}])

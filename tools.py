@@ -28,6 +28,12 @@ def delete_all_bookmarks():
     return render_template('tools/delete_all.html')
 
 
+@tools.route('/export', methods=['GET', 'POST'])
+@login_required
+def export_bookmarks():
+    return render_template('tools/export.html')
+
+
 @tools.route('/import', methods=['GET', 'POST'])
 @login_required
 def import_bookmarks():
