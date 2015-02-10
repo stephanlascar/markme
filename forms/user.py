@@ -18,11 +18,11 @@ class UserForm(Form):
     confirm_new_password = PasswordField(u'Confirmer le nouveau mot de passe', validators=[EqualTo('new_password', message=u'Les mots de passe doivent correspondre')])
 
     def validate_email(self, field):
-        if mongo.db.users.find_one({'email': field.data}):
+        if mongo.db.users.find_one({'$and': [{'email': field.data}, {'_id': {'$ne': ObjectId(current_user.get_id())}}]}):
             raise ValidationError(field.gettext(u'Cet email est déjà utilisé.'))
 
     def validate_nickname(self, field):
-        if mongo.db.users.find_one({'nickname': field.data}):
+        if mongo.db.users.find_one({'$and': [{'nickname': field.data}, {'_id': {'$ne': ObjectId(current_user.get_id())}}]}):
             raise ValidationError(field.gettext(u'Ce nom d\'utilisateur est déjà utilisé.'))
 
     def validate_actual_password(self, field):

@@ -5,7 +5,7 @@
     {% include 'layout/alert.html' %}
 
     <h3>général</h3>
-    <form class="form-horizontal" role="form" method="post" action="{{url_for('profil.index')}}">
+    <form class="form-horizontal" role="form" method="post" action="{{url_for('profil.index')}}" autocomplete="off">
         {{ form.hidden_tag() }}
 
         <div class="form-group {% if form.nickname.errors %}has-error{% endif %}">
