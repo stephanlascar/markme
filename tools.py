@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import datetime
+from StringIO import StringIO
+from io import BytesIO
+from zipfile import ZipFile
 from bson import ObjectId
 import feedparser
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, send_file
 from flask.ext.login import login_required, current_user
+from werkzeug.contrib.atom import AtomFeed
 from database import mongo
 from forms.imports import ImportForm
 
@@ -28,10 +32,27 @@ def delete_all_bookmarks():
     return render_template('tools/delete_all.html')
 
 
-@tools.route('/export', methods=['GET', 'POST'])
+@tools.route('/export')
 @login_required
 def export_bookmarks():
     return render_template('tools/export.html')
+
+
+@tools.route('/download_atom')
+@login_required
+def download_atom():
+    feed = AtomFeed(title='Mes bookmarks',
+                    feed_url='xxx',
+                    url='http://www.markme.com')
+
+    for bookmark in mongo.db.bookmarks.find({'user._id': ObjectId(current_user.get_id())}):
+        feed.add(id=bookmark['_id'], title=bookmark['title'], content=bookmark['description'],
+                 content_type='text', updated=bookmark['published'],
+                 links=[dict(href=bookmark['url']), dict(via=bookmark['referrer'])],
+                 categories=[dict(term=tag, label=tag) for tag in bookmark['tags']],
+                 author=dict(name=current_user.nickname, nickname=current_user.nickname, email=current_user.email))
+
+    return send_file(StringIO(feed.to_string().encode('utf-8')), attachment_filename='bookmarks.xml', as_attachment=True, mimetype='application/atom+xml')
 
 
 @tools.route('/import', methods=['GET', 'POST'])

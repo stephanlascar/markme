@@ -5,11 +5,9 @@
     <div class="col-md-6 sidebar right-menu">
         <h3>exporter</h3>
 
-        <p>La sauvegarde blogmarks.net est un gros feed Atom avec tout vos bookmarks, compressé en gzip.</p>
+        <p>La sauvegarde blogmarks.net est un gros feed Atom avec tout vos bookmarks.</p>
         <p>C'est nos format officiel d'export et garantie aucune perte de donnée.</p>
 
-        <form role="form" method="post" action="{{ url_for('tools.export_bookmarks') }}">
-            <button type="submit" class="btn btn-primary">Téléchargez votre sauvegarde markme</button>
-        </form>
+        <a href="{{ url_for('tools.download_atom') }}" class="btn btn-primary">Téléchargez votre sauvegarde markme</a>
     </div>
 {% endblock %}
