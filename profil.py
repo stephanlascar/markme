@@ -17,6 +17,7 @@ def index():
     form = UserForm(nickname=current_user.nickname, email=current_user.email)
     if request.method == 'POST' and form.validate():
         mongo.db.users.update({'_id': ObjectId(current_user.get_id())}, {'$set': {'email': form.email.data, 'nickname': form.nickname.data}})
+        mongo.db.bookmarks.update({'user._id': ObjectId(current_user.get_id())}, {'$set': {'user.email': form.email.data, 'user.nickname': form.nickname.data}}, multi=True)
         if form.new_password.data:
             mongo.db.users.update({'_id': ObjectId(current_user.get_id())}, {'$set': {'password': bcrypt.generate_password_hash(form.new_password.data, rounds=12)}})
         flash(u'Les modifications ont été correctement enregistrées.')
