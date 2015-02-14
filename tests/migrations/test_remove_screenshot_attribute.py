@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
 import mongomock
-from migrations import remove_screenshot_attribute
+from migrations import remove_bookmark_screenshot_attribute
 
 
 class TestRemoveScreenshotAttribute(TestCase):
@@ -24,7 +24,7 @@ class TestRemoveScreenshotAttribute(TestCase):
                 'bruce': 'wayne'
             }
         ])
-        remove_screenshot_attribute.do_it(self.database)
+        remove_bookmark_screenshot_attribute.do_it(self.database)
 
         self.assertEqual([
             {
