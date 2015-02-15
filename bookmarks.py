@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+import os
 
 from bson import ObjectId, SON
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from flask.ext.login import login_required, login_user, current_user
 import pymongo
+from readability import ParserClient
 
 from auth import bcrypt, User
 from database import mongo, add_constraint_to_criteria
@@ -132,6 +134,14 @@ def delete_bookmark(bookmark_id):
     return redirect(url_for('.index'))
 
 
+@bookmarks.route('/bookmarks/read/<bookmark_id>')
+@login_required
+def read_bookmark(bookmark_id):
+    criteria = {'user._id': ObjectId(current_user.get_id()), '_id': ObjectId(bookmark_id)}
+    bookmark = mongo.db.bookmarks.find_one(criteria)
+    return render_template('/bookmarks/read.html', bookmark=bookmark)
+
+
 @bookmarks.route('/bookmarks/edit/<bookmark_id>')
 @login_required
 def edit_bookmark(bookmark_id):
@@ -147,6 +157,7 @@ def _save_bookmark(bookmark_form):
                               {'$set': {
                                   'title': bookmark_form.title.data,
                                   'url': bookmark_form.url.data,
+                                  #'content': ParserClient(os.getenv('READABILITY_PARSER_KEY')).get_article_content(bookmark_form.url.data).content.get('content', ''),
                                   'description': bookmark_form.description.data,
                                   'referrer': bookmark_form.referrer.data,
                                   'tags': bookmark_form.tags.data,

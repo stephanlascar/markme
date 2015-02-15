@@ -1,0 +1,20 @@
+<!doctype html>
+<html class="width-wide font-sentinel mode-day size-medium js no-touch backgroundsize boxshadow opacity cssanimations cssgradients csstransforms csstransitions formvalidation" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bookmark['title'] }}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/article.css')}}">
+</head>
+<body class="article">
+    <div class="container bookmark">
+        <article class="hentry">
+            <section role="main">
+                <div class="entry-content">
+                    {{ bookmark['content']|safe }}
+                </div>
+            </section>
+        </article>
+    </div>
+</body>
+</html>

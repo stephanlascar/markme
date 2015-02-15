@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from pymongo import MongoClient
+from readability import ParserClient
 
 
 def do_it(database, parser_client):
@@ -10,6 +11,6 @@ def do_it(database, parser_client):
 
 if __name__ == '__main__':
     client = MongoClient(os.environ['MONGOLAB_URI'])
-    do_it(client.get_default_database())
+    do_it(client.get_default_database(), ParserClient(os.getenv('READABILITY_PARSER_KEY')))
 
 
