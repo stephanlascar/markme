@@ -24,7 +24,7 @@ def create_app(mongo_uri, debug=False, testing=False):
     app.config['TESTING'] = testing
     app.config['WTF_CSRF_ENABLED'] = not testing
     app.config['MONGO_URI'] = mongo_uri
-    app.secret_key = os.environ['SECRET_KEY']
+    app.secret_key = os.environ.get('SECRET_KEY', 'clef pour les tests')
     Babel(default_locale='fr').init_app(app)
     Gravatar().init_app(app)
     mongo.init_app(app)
