@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from functools import update_wrapper
-import os
 from flask.ext.testing import TestCase
 from database import mongo
 import markme
@@ -9,7 +8,7 @@ import markme
 class WebAppTestCase(TestCase):
 
     def create_app(self):
-        return markme.create_app(os.environ['MONGO_UNITTEST_URI'], debug=True, testing=True)
+        return markme.create_app('mongodb://localhost/markme', debug=True, testing=True)
 
     def assert_flashes(self, expected_message, expected_category='message'):
         with self.client.session_transaction() as session:
