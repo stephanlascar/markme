@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from StringIO import StringIO
 import datetime
-from pprint import pprint
+
 from bson import ObjectId
 import feedparser
 from nose.tools import assert_equal
+
 from auth import bcrypt
 from database import mongo
 from tests import mongo_data, WebAppTestCase

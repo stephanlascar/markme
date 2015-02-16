@@ -25,7 +25,7 @@ def mongo_data(**collections):
     def decorator(decorated):
         def wrapper(self):
             for collection, data in collections.items():
-                mongo.db[collection].remove()
+                mongo.db[collection].drop()
                 mongo.db[collection].insert(data)
             decorated(self)
         return update_wrapper(wrapper, decorated)
