@@ -11,4 +11,5 @@ class BookmarkForm(Form):
     description = TextAreaField('Description', validators=[Optional(), Length(max=700)])
     referrer = HiddenField('Referrer')
     public = BooleanField('Public')
+    archive = BooleanField('Archiver')
     tags = TagListField('Tags')

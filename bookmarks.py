@@ -138,34 +138,38 @@ def delete_bookmark(bookmark_id):
 @login_required
 def read_bookmark(bookmark_id):
     criteria = {'user._id': ObjectId(current_user.get_id()), '_id': ObjectId(bookmark_id)}
-    bookmark = mongo.db.bookmarks.find_one(criteria)
+    bookmark = mongo.db.bookmarks.find_one_or_404(criteria)
     return render_template('/bookmarks/read.html', bookmark=bookmark)
+
 
 
 @bookmarks.route('/bookmarks/edit/<bookmark_id>')
 @login_required
 def edit_bookmark(bookmark_id):
     criteria = {'user._id': ObjectId(current_user.get_id()), '_id': ObjectId(bookmark_id)}
-    bookmark = mongo.db.bookmarks.find_one(criteria)
+    bookmark = mongo.db.bookmarks.find_one_or_404(criteria)
     form = BookmarkForm(title=bookmark['title'], url=bookmark['url'], description=bookmark['description'], tags=bookmark['tags'], public=bookmark['public'], referrer=bookmark['referrer']) if bookmark else BookmarkForm(request.args)
 
     return render_template('bookmarks/new.html', tags=_get_top_tags(criteria), users=_get_most_active_users(), form=form)
 
 
 def _save_bookmark(bookmark_form):
+    bookmark = {
+        'title': bookmark_form.title.data,
+        'url': bookmark_form.url.data,
+        'description': bookmark_form.description.data,
+        'referrer': bookmark_form.referrer.data,
+        'tags': bookmark_form.tags.data,
+        'published': datetime.datetime.utcnow(),
+        'public': bookmark_form.public.data,
+        'user': {
+            '_id': ObjectId(current_user.get_id()),
+            'nickname': current_user.nickname,
+            'email': current_user.email
+        }
+    }
+    if bookmark_form.archive.data:
+        bookmark['content'] = ParserClient(os.getenv('READABILITY_PARSER_KEY')).get_article_content(bookmark_form.url.data).content['content']
+
     mongo.db.bookmarks.update({'url': bookmark_form.url.data, 'user._id': ObjectId(current_user.get_id())},
-                              {'$set': {
-                                  'title': bookmark_form.title.data,
-                                  'url': bookmark_form.url.data,
-                                  #'content': ParserClient(os.getenv('READABILITY_PARSER_KEY')).get_article_content(bookmark_form.url.data).content.get('content', ''),
-                                  'description': bookmark_form.description.data,
-                                  'referrer': bookmark_form.referrer.data,
-                                  'tags': bookmark_form.tags.data,
-                                  'published': datetime.datetime.utcnow(),
-                                  'public': bookmark_form.public.data,
-                                  'user': {
-                                      '_id': ObjectId(current_user.get_id()),
-                                      'nickname': current_user.nickname,
-                                      'email': current_user.email
-                                  }
-                              }}, upsert=True)
+                              {'$set': bookmark}, upsert=True)
