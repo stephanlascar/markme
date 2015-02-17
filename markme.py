@@ -13,9 +13,10 @@ from flask.ext.gravatar import Gravatar
 
 from auth import login_manager, bcrypt, auth
 from bookmarks import bookmarks
+from database.models import Test, Toto
 from profil import profil
 from tools import tools
-from database import mongo
+from database import mongo, db
 
 
 def create_app(mongo_uri, debug=False, testing=False):
@@ -28,6 +29,7 @@ def create_app(mongo_uri, debug=False, testing=False):
     Babel(default_locale='fr').init_app(app)
     Gravatar().init_app(app)
     mongo.init_app(app)
+    db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
 
@@ -47,6 +49,9 @@ def create_app(mongo_uri, debug=False, testing=False):
 
         mongo.db.users.ensure_index('email', pymongo.ASCENDING, background=True, unique=True)
         mongo.db.users.ensure_index('nickname', pymongo.ASCENDING, background=True, unique=True)
+
+        # test = Test(title='testo erchuorecuh', url='htteuoep://', tags=['oeu', ',euoue'], user=Toto(email='aaa@'))
+        # test.save()
 
 
     @environmentfilter
