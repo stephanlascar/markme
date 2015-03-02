@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
 import markme
 
 
-app = markme.create_app('mongodb://localhost/markme', debug=True)
+app = markme.create_app(os.environ['MONGOLAB_URI'])

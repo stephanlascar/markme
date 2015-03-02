@@ -13,7 +13,6 @@ from flask.ext.gravatar import Gravatar
 
 from auth import login_manager, bcrypt, auth
 from bookmarks import bookmarks
-from database.models import Test, Toto
 from profil import profil
 from tools import tools
 from database import mongo, db

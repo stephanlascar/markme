@@ -164,7 +164,9 @@ def _save_bookmark(bookmark_form):
         }
     }
     if bookmark_form.archive.data:
-        bookmark['content'] = ParserClient(os.getenv('READABILITY_PARSER_KEY')).get_article_content(bookmark_form.url.data).content['content']
+        response = ParserClient(os.getenv('READABILITY_PARSER_KEY')).get_article_content(bookmark_form.url.data)
+        if response.status == 200:
+            bookmark['content'] = response.content['content']
 
     mongo.db.bookmarks.update({'url': bookmark_form.url.data, 'user._id': ObjectId(current_user.get_id())},
                               {'$set': bookmark}, upsert=True)
